@@ -19,7 +19,7 @@
       :min-nav="navbarMinimize"
     />
     <router-view />
-    <app-footer v-show="$store.state.showFooter" />
+    <!-- <app-footer v-show="$store.state.showFooter" /> -->
     <configurator
       :toggle="toggleConfigurator"
       :class="[

@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Dashboards from "@/views/Dashboards.vue";
+import Dashboard from "@/views/Dashboard.vue";
 import Tables from "@/views/Tables.vue";
 import Billing from "@/views/Billing.vue";
 import VirtualReality from "@/views/VirtualReality.vue";
@@ -23,6 +24,14 @@ const routes = [
     path: "/trang-chu",
     name: "TrangChu",
     component: Dashboards,
+    meta: {
+      name: "Trang chủ",
+    },
+  },
+  {
+    path: "/trang-chu-example",
+    name: "TrangChuExam",
+    component: Dashboard,
   },
   {
     path: "/tables",
