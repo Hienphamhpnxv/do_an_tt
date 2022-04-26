@@ -3,7 +3,11 @@
     <div class="row">
       <div class="col-12">
         <div class="text-end mb-4">
-          <vsud-button color="dark" variant="gradient">
+          <vsud-button
+            color="dark"
+            variant="gradient"
+            @click="showModalMember = true"
+          >
             <i class="fas fa-plus me-2"></i>
             Thêm thành viên
           </vsud-button>
@@ -93,47 +97,9 @@
         </div>
       </div>
     </div>
-    <button
-      type="button"
-      class="btn btn-primary"
-      data-bs-toggle="modal"
-      data-bs-target="#exampleModal"
-    >
-      Launch demo modal
-    </button>
-
-    <div
-      class="modal fade"
-      id="exampleModal"
-      tabindex="-1"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">...</div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Modal :value="showModalMember" body-class="wrap-preview rounded-3">
+      <ModalCreateMember @close-popup="showModalMember = false" />
+    </Modal>
     <!-- <div class="row">
       <div class="col-12">
         <projects-table />
@@ -143,6 +109,8 @@
 </template>
 
 <script>
+import ModalCreateMember from "./ModalCreateMember.vue";
+
 import VsudAvatar from "@/components/VsudAvatar.vue";
 import VsudBadge from "@/components/VsudBadge.vue";
 import VsudButton from "@/components/VsudButton.vue";
@@ -174,10 +142,12 @@ export default {
     VsudAvatar,
     VsudBadge,
     VsudButton,
+    ModalCreateMember,
   },
   data() {
     return {
       members,
+      showModalMember: false,
     };
   },
 };

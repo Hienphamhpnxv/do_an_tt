@@ -19,4 +19,10 @@ import "./assets/css/nucleo-icons.css";
 import "./assets/css/nucleo-svg.css";
 import SoftUIDashboard from "./soft-ui-dashboard";
 
-createApp(App).use(store).use(router).use(SoftUIDashboard).mount("#app");
+import Modal from "./components/Modal.vue";
+
+const Vue = createApp(App);
+
+Vue.component("Modal", Modal);
+
+Vue.use(store).use(router).use(SoftUIDashboard).mount("#app");
