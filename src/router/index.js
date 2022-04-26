@@ -8,6 +8,7 @@ import Profile from "@/views/Profile.vue";
 import Rtl from "@/views/Rtl.vue";
 import SignIn from "@/views/SignIn.vue";
 import SignUp from "@/views/SignUp.vue";
+import MemberManage from "@/views/member/MemberManage.vue";
 
 const routes = [
   // {
@@ -32,6 +33,14 @@ const routes = [
     path: "/trang-chu-example",
     name: "TrangChuExam",
     component: Dashboard,
+  },
+  {
+    path: "/quan-ly-thanh-vien",
+    name: "ManageMember",
+    component: MemberManage,
+    meta: {
+      name: "Quản lý thành viên",
+    },
   },
   {
     path: "/tables",
