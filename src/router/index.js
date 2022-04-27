@@ -9,6 +9,7 @@ import Rtl from "@/views/Rtl.vue";
 import SignIn from "@/views/SignIn.vue";
 import SignUp from "@/views/SignUp.vue";
 import MemberManage from "@/views/member/MemberManage.vue";
+import WorkManage from "@/views/work/WorkManage.vue";
 
 const routes = [
   // {
@@ -40,6 +41,14 @@ const routes = [
     component: MemberManage,
     meta: {
       name: "Quản lý thành viên",
+    },
+  },
+  {
+    path: "/quan-ly-cong-viec",
+    name: "WorkManage",
+    component: WorkManage,
+    meta: {
+      name: "Quản lý công việc",
     },
   },
   {

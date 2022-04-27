@@ -6,6 +6,7 @@
           <div class="col-5">
             <label for="fullname">Họ và tên</label>
             <input
+              v-model="member.fullname"
               type="text"
               class="form-control"
               id="fullname"
@@ -16,6 +17,7 @@
           <div class="col-5">
             <label for="studentCode">Mã sinh viên</label>
             <input
+              v-model="member.studentCode"
               type="text"
               class="form-control"
               id="studentCode"
@@ -28,6 +30,7 @@
           <div class="col-5">
             <label for="className">Lớp</label>
             <input
+              v-model="member.classname"
               type="text"
               class="form-control"
               id="className"
@@ -51,6 +54,7 @@
         <div class="form-group">
           <label for="birthday">Ngày sinh</label>
           <input
+            v-model="member.birthday"
             type="date"
             class="form-control"
             id="birthday"
@@ -81,8 +85,9 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="address">Quên quán</label>
+          <label for="address">Quê quán</label>
           <input
+            v-model="member.address"
             type="text"
             class="form-control"
             id="address"
@@ -92,6 +97,7 @@
         <div class="form-group">
           <label for="phoneNumber">Số điện thoại</label>
           <input
+            v-model="member.phoneNumber"
             type="text"
             class="form-control"
             id="phoneNumber"
@@ -101,6 +107,7 @@
         <div class="form-group">
           <label for="email">Email</label>
           <input
+            v-model="member.email"
             type="email"
             class="form-control"
             id="email"
@@ -211,6 +218,19 @@
 <script>
 import VsudInput from "@/components/VsudInput.vue";
 export default {
+  data() {
+    return {
+      member: {
+        fullname: "",
+        studentCode: "",
+        classname: "",
+        birthday: "",
+        address: "",
+        phoneNumber: "",
+        email: "",
+      },
+    };
+  },
   components: {
     VsudInput,
   },
