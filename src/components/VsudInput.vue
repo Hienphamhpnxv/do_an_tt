@@ -11,6 +11,8 @@
         :class="getClasses(size, valid)"
         :name="name"
         :value="value"
+        @input="onInput"
+        @change="onChange"
         :placeholder="placeholder"
         :isRequired="isRequired"
       />
@@ -35,31 +37,31 @@ export default {
     },
     icon: {
       type: String,
-      default: ""
+      default: "",
     },
     iconDir: {
       type: String,
-      default: ""
+      default: "",
     },
     name: {
       type: String,
-      default: ""
+      default: "",
     },
     id: {
       type: String,
-      default: ""
+      default: "",
     },
     value: {
       type: String,
-      default: ""
+      default: "",
     },
     placeholder: {
       type: String,
-      default: ""
+      default: "",
     },
     type: {
       type: String,
-      default: ""
+      default: "",
     },
     isRequired: Boolean,
   },
@@ -75,6 +77,12 @@ export default {
     },
     getIcon: (icon) => (icon ? icon : null),
     hasIcon: (icon) => (icon ? "input-group" : null),
+    onInput(event) {
+      this.$emit("input", event.target.value);
+    },
+    onChange(event) {
+      this.$emit("change", event.target.value);
+    },
   },
 };
 </script>

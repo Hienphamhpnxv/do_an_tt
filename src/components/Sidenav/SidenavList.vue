@@ -74,7 +74,7 @@
       </li>
     </ul>
   </div>
-  <div class="pt-3 mx-3 mt-3 sidenav-footer">
+  <!-- <div class="pt-3 mx-3 mt-3 sidenav-footer">
     <sidenav-card
       :class="cardBg"
       text-primary="Need Help?"
@@ -89,7 +89,7 @@
       type="button"
       >Upgrade to pro</a
     >
-  </div>
+  </div> -->
 </template>
 <script>
 import Icon from "@/components/Icon.vue";
