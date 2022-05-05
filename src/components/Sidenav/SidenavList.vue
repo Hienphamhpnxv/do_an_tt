@@ -59,19 +59,23 @@
         </sidenav-collapse>
       </li>
       <li class="nav-item">
-        <sidenav-collapse nav-text="Sign In" :to="{ name: 'Sign In' }">
+        <sidenav-collapse
+          href="javascript:;"
+          nav-text="Đăng xuất"
+          :to="{ name: 'Sign In' }"
+        >
           <template #icon>
             <icon name="sign-in" />
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <sidenav-collapse nav-text="Sign Up" :to="{ name: 'Sign Up' }">
           <template #icon>
             <icon name="sign-up" />
           </template>
         </sidenav-collapse>
-      </li>
+      </li> -->
     </ul>
   </div>
   <!-- <div class="pt-3 mx-3 mt-3 sidenav-footer">
@@ -95,6 +99,7 @@
 import Icon from "@/components/Icon.vue";
 import SidenavCollapse from "./SidenavCollapse.vue";
 import SidenavCard from "./SidenavCard.vue";
+import { mapActions } from "vuex";
 
 export default {
   name: "SidenavList",
@@ -116,7 +121,11 @@ export default {
       isActive: "active",
     };
   },
+  beforeUnmount() {
+    this.logout();
+  },
   methods: {
+    ...mapActions("auth", ["logout"]),
     getRoute() {
       const routeArr = this.$route.path.split("/");
       return routeArr[1];

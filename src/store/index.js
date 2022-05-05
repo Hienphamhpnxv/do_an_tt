@@ -1,10 +1,14 @@
 import { createStore } from "vuex";
 import { auth } from "./modules/auth";
+import { user } from "./modules/user";
+import { club } from "./modules/club";
 
-export default createStore({
+const store = createStore({
   namespaced: true,
   modules: {
     auth,
+    user,
+    club,
   },
   state: {
     hideConfigButton: false,
@@ -61,3 +65,15 @@ export default createStore({
   },
   getters: {},
 });
+
+if (window.performance) {
+  const user = JSON.parse(window.localStorage.getItem("user"));
+  if (user && !user.memberId) {
+    store.commit("user/setIsAdmin", true);
+    store.dispatch("club/getAllClubs");
+  }
+  store.commit("user/setUser", user);
+  store.dispatch("club/getAllClubs");
+}
+
+export default store;

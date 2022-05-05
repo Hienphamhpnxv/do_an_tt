@@ -26,25 +26,25 @@
                 <div class="card-body">
                   <form @submit.prevent role="form" class="text-start">
                     <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label"
-                        >Email</label
-                      >
+                      <label for="email" class="form-label">Email</label>
                       <input
                         id="email"
-                        v-model="user.email"
+                        v-model="email"
                         type="email"
                         class="form-control"
                         aria-describedby="emailHelp"
                       />
                     </div>
-                    <label>Mật khẩu</label>
-                    <vsud-input
-                      id="password"
-                      v-model="user.password"
-                      type="password"
-                      placeholder="Password"
-                      name="password"
-                    />
+                    <div class="mb-3">
+                      <label for="password" class="form-label">Mật khẩu</label>
+                      <input
+                        id="password"
+                        v-model="password"
+                        type="password"
+                        class="form-control"
+                        aria-describedby="passwordHelp"
+                      />
+                    </div>
                     <!-- <vsud-switch id="rememberMe" checked
                       >Remember me</vsud-switch
                     > -->
@@ -66,6 +66,7 @@
                     <a
                       href="javascript:;"
                       class="text-info text-gradient font-weight-bold"
+                      @click="redirectSignUp"
                       >Đăng ký</a
                     >
                   </p>
@@ -87,51 +88,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="page-header vh-100">
-        <div class="container">
-          <div class="row">
-            <div class="mx-auto d-flex flex-column">
-              <div class="container">
-                <div class="left">
-                  <div class="login">Login</div>
-                  <div class="eula">
-                    <b>CLB Hỗ trợ Kỹ thuật IT Suppoter</b>
-                  </div>
-                </div>
-                <div class="right">
-                  <form class="form">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" class="email" />
-                    <label for="password">Password</label>
-                    <input type="password" id="password" class="password" />
-                    <div class="group-btn">
-                      <input
-                        class="btn btn-submit"
-                        type="submit"
-                        id="submit"
-                        value="Submit"
-                      />
-                    </div>
-                    <div class="text-center">
-                      <vsud-button
-                        class="my-4 mb-2 btn btn-submit"
-                        variant="gradient"
-                        color="info"
-                        full-width
-                        @click="handleSignin"
-                        >Sign in</vsud-button
-                      >
-                    </div>
-                  </form>
-                  <div class="signup-link">
-                    <a href="#"><u>Register</u></a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> -->
     </section>
   </main>
   <!-- <app-footer /> -->
@@ -160,10 +116,8 @@ export default {
   data() {
     return {
       bgImg,
-      user: {
-        email: "",
-        password: "",
-      },
+      email: "",
+      password: "",
     };
   },
   beforeMount() {
@@ -183,16 +137,18 @@ export default {
   methods: {
     ...mapActions("auth/", ["login"]),
     async handleSignin() {
-      const { user } = this;
-      console.log(user.email && user.password);
-      if (user.email && user.password) {
-        await this.login(user).then(() => {
+      const { email, password } = this;
+
+      if (email && password) {
+        await this.login({ email, password }).then(() => {
           this.$router.push({ name: "TrangChu" });
-          window.location.href = window.location.origin;
         });
       } else {
         console.log("Tài khoản hoặc mật khẩu không đúng");
       }
+    },
+    redirectSignUp() {
+      this.$router.push({ name: "Sign Up" });
     },
   },
 };

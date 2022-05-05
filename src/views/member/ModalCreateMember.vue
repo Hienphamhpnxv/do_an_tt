@@ -206,7 +206,7 @@
           >
             Hủy bỏ
           </button>
-          <button type="button" class="btn btn-success">
+          <button type="button" class="btn btn-success" @click="createMember">
             Đăng ký thành viên
           </button>
         </div>
@@ -217,6 +217,8 @@
 
 <script>
 import VsudInput from "@/components/VsudInput.vue";
+import { mapActions } from "vuex";
+
 export default {
   data() {
     return {
@@ -235,8 +237,15 @@ export default {
     VsudInput,
   },
   methods: {
+    ...mapActions({
+      addMember: "user/addMember",
+    }),
     closeModalCreate() {
       this.$emit("closePopup");
+    },
+    async createMember() {
+      const data = { basicInfo: {}, memberInfo: {} };
+      await this.addMember(data);
     },
   },
 };

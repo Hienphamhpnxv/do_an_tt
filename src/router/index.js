@@ -11,6 +11,8 @@ import SignUp from "@/views/SignUp.vue";
 import MemberManage from "@/views/member/MemberManage.vue";
 import WorkManage from "@/views/work/WorkManage.vue";
 
+import store from "../store";
+
 const routes = [
   // {
   //   path: "/",
@@ -28,6 +30,7 @@ const routes = [
     component: Dashboards,
     meta: {
       name: "Trang chủ",
+      requiresAuth: true,
     },
   },
   {
@@ -41,6 +44,7 @@ const routes = [
     component: MemberManage,
     meta: {
       name: "Quản lý thành viên",
+      requiresAuth: true,
     },
   },
   {
@@ -49,6 +53,7 @@ const routes = [
     component: WorkManage,
     meta: {
       name: "Quản lý công việc",
+      requiresAuth: true,
     },
   },
   {
@@ -80,18 +85,56 @@ const routes = [
     path: "/sign-in",
     name: "Sign In",
     component: SignIn,
+    meta: {
+      requiresAuth: false,
+    },
   },
   {
     path: "/sign-up",
     name: "Sign Up",
     component: SignUp,
+    meta: {
+      requiresAuth: false,
+    },
   },
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(),
   routes,
   linkActiveClass: "active",
 });
+
+router.beforeEach((to, from) => {
+  const isLoggin = store.getters["auth/isLoggedIn"];
+  const user = JSON.parse(window.localStorage.getItem("user"));
+  // instead of having to check every route record with
+  // to.matched.some(record => record.meta.requiresAuth)
+  if (user) {
+    const decodedJwt = parseJwt(user.accessToken);
+
+    if (decodedJwt.exp * 1000 < Date.now()) {
+      return {
+        path: "/sign-in",
+      };
+    }
+  }
+
+  if (to.meta.requiresAuth && !isLoggin) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    return {
+      path: "/sign-in",
+    };
+  }
+});
+
+const parseJwt = (token) => {
+  try {
+    return JSON.parse(atob(token.split(".")[1]));
+  } catch (e) {
+    return null;
+  }
+};
 
 export default router;
