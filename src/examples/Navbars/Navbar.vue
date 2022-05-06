@@ -69,7 +69,7 @@
               <i class="cursor-pointer fa fa-cog fixed-plugin-button-nav"></i>
             </a>
           </li> -->
-          <li
+          <!-- <li
             v-if="isAdmin"
             class="nav-item dropdown d-flex align-items-center ms-2"
             :class="$store.state.isRTL ? 'ps-2' : 'pe-2'"
@@ -116,7 +116,7 @@
                 </a>
               </li>
             </ul>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>

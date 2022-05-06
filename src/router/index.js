@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Dashboards from "@/views/Dashboards.vue";
+import CommonWork from "@/views/commonWork/CommonWork.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import Tables from "@/views/Tables.vue";
 import Billing from "@/views/Billing.vue";
@@ -30,6 +31,15 @@ const routes = [
     component: Dashboards,
     meta: {
       name: "Trang chủ",
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/cong-viec-chung",
+    name: "CommonWork",
+    component: CommonWork,
+    meta: {
+      name: "Công việc chung",
       requiresAuth: true,
     },
   },

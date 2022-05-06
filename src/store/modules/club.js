@@ -1,6 +1,9 @@
 import instance from "../axios.config";
 import logoITSupport from "@/assets/img/logo-ct.png";
 import logoHit from "@/assets/img/hit.jpg";
+import logoTNTN from "@/assets/img/tntn.jpg";
+import logoIStar from "@/assets/img/istar.jpg";
+import logoFIT from "@/assets/img/fit.jpg";
 
 export const club = {
   namespaced: true,
@@ -8,14 +11,19 @@ export const club = {
     currentClub: {},
     clubSchool: [
       {
-        id: 0,
-        name: "IT Supporter",
         logo: logoITSupport,
       },
       {
-        id: 1,
-        name: "HIT",
         logo: logoHit,
+      },
+      {
+        logo: logoTNTN,
+      },
+      {
+        logo: logoIStar,
+      },
+      {
+        logo: logoFIT,
       },
     ],
   }),
@@ -24,13 +32,16 @@ export const club = {
       state.currentClub = payload;
     },
     setClubSchool(state, payload) {
-      state.clubSchool = payload;
+      const data = payload.map((el, index) => {
+        return { ...state.clubSchool[index], ...el };
+      });
+      state.clubSchool = data;
     },
   },
   actions: {
     async getAllClubs(_, payload) {
       await instance
-        .get("/club")
+        .get("/club/get-all")
         .then((res) => {
           _.commit("setClubSchool", res.data);
           _.dispatch("setCurrentClub");

@@ -13,13 +13,13 @@
       ></i>
       <div class="d-flex justify-content-center">
         <a class="m-0 navbar-brand d-flex align-items-center" href="/">
-          <img
+          <!-- <img
             :src="logo"
             class="navbar-brand-img h-100 rounded"
             alt="main_logo"
-          />
+          /> -->
           <span class="ms-1 font-weight-bold fs-4 text-uppercase"
-            >IT Supporter</span
+            >FIT - HAUI</span
           >
         </a>
       </div>

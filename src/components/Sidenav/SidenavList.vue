@@ -11,7 +11,17 @@
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item">
+      <li v-if="isAdmin" class="nav-item">
+        <sidenav-collapse
+          nav-text="Quản lý công việc chung"
+          :to="{ name: 'CommonWork' }"
+        >
+          <template #icon>
+            <icon name="dashboard" />
+          </template>
+        </sidenav-collapse>
+      </li>
+      <!-- <li class="nav-item">
         <sidenav-collapse nav-text="Tables" :to="{ name: 'Tables' }">
           <template #icon>
             <icon name="tables" />
@@ -43,21 +53,13 @@
           </template>
         </sidenav-collapse>
       </li>
-      <li class="mt-3 nav-item">
-        <h6
-          class="text-xs ps-4 text-uppercase font-weight-bolder opacity-6"
-          :class="$store.state.isRTL ? 'me-4' : 'ms-2'"
-        >
-          PAGES
-        </h6>
-      </li>
       <li class="nav-item">
         <sidenav-collapse nav-text="Profile" :to="{ name: 'Profile' }">
           <template #icon>
             <icon name="customer-support" />
           </template>
         </sidenav-collapse>
-      </li>
+      </li> -->
       <li class="nav-item">
         <sidenav-collapse
           href="javascript:;"
@@ -99,7 +101,7 @@
 import Icon from "@/components/Icon.vue";
 import SidenavCollapse from "./SidenavCollapse.vue";
 import SidenavCard from "./SidenavCard.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "SidenavList",
@@ -123,6 +125,11 @@ export default {
   },
   beforeUnmount() {
     this.logout();
+  },
+  computed: {
+    ...mapState({
+      isAdmin: (state) => state.user.isAdmin,
+    }),
   },
   methods: {
     ...mapActions("auth", ["logout"]),
