@@ -30,21 +30,23 @@
         <ul class="navbar-nav justify-content-end">
           <li class="nav-item d-flex align-items-center">
             <!-- avatar -->
-            <div class="d-flex align-items-center">
-              <div
-                class="rounded-circle overflow-hidden border border-red-500 border-1 me-2"
-                style="height: 40px; width: 40px"
-              >
-                <img
-                  :src="user?.avatar_url || ''"
-                  class="img-thumbnail h-100 cursor-pointer"
-                  alt="avatar"
-                />
+            <router-link to="/ca-nhan">
+              <div class="d-flex align-items-center">
+                <div
+                  class="rounded-circle overflow-hidden border border-red-500 border-1 me-2"
+                  style="height: 40px; width: 40px"
+                >
+                  <img
+                    :src="user?.avatar_url || ''"
+                    class="img-thumbnail h-100 cursor-pointer"
+                    alt="avatar"
+                  />
+                </div>
+                <p class="m-0 cursor-pointer font-normal fs-6">
+                  {{ user?.name }}
+                </p>
               </div>
-              <p class="m-0 cursor-pointer font-normal fs-6">
-                {{ user?.name }}
-              </p>
-            </div>
+            </router-link>
           </li>
           <!-- <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
             <a
@@ -145,16 +147,13 @@ export default {
   data() {
     return {
       showMenu: false,
-      user: null,
     };
-  },
-  mounted() {
-    this.getUserInfo();
   },
   computed: {
     ...mapState({
       teamInSchool: (state) => state.club.clubSchool,
       isAdmin: (state) => state.user.isAdmin,
+      user: (state) => state.user.user,
     }),
     currentRouteName() {
       return this.$route.meta?.name || this.$route.name;
@@ -184,9 +183,6 @@ export default {
     toggleSidebar() {
       this.toggleSidebarColor("bg-white");
       this.navbarMinimize();
-    },
-    getUserInfo() {
-      this.user = this.$store.getters["user/getUserInfo"];
     },
     transfor() {
       this.$router.push({ name: "TrangChu" });

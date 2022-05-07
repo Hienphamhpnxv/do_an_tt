@@ -11,6 +11,7 @@ import SignIn from "@/views/SignIn.vue";
 import SignUp from "@/views/SignUp.vue";
 import MemberManage from "@/views/member/MemberManage.vue";
 import WorkManage from "@/views/work/WorkManage.vue";
+import MemberProfile from "@/views/member/MemberProfile.vue";
 
 import store from "../store";
 
@@ -58,11 +59,30 @@ const routes = [
     },
   },
   {
+    path: "/quan-ly-cong-tac-vien",
+    name: "ManageMemberColab",
+    component: MemberManage,
+    meta: {
+      name: "Quản lý cộng tác viên",
+      memberColab: true,
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/quan-ly-cong-viec",
     name: "WorkManage",
     component: WorkManage,
     meta: {
-      name: "Quản lý công việc",
+      name: "Quản lý hoạt động",
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/ca-nhan",
+    name: "MemberProfile",
+    component: MemberProfile,
+    meta: {
+      name: "Trang cá nhân",
       requiresAuth: true,
     },
   },

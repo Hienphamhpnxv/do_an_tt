@@ -1,7 +1,9 @@
+import { ROLES } from "../utils/constants";
 import { createStore } from "vuex";
 import { auth } from "./modules/auth";
 import { user } from "./modules/user";
 import { club } from "./modules/club";
+import { role } from "./modules/role";
 
 const store = createStore({
   namespaced: true,
@@ -9,6 +11,7 @@ const store = createStore({
     auth,
     user,
     club,
+    role,
   },
   state: {
     hideConfigButton: false,
@@ -24,6 +27,7 @@ const store = createStore({
     showNavbar: true,
     showFooter: true,
     showMain: true,
+    spinLoading: false,
   },
   mutations: {
     toggleConfigurator(state) {
@@ -57,6 +61,9 @@ const store = createStore({
         state.isNavFixed = false;
       }
     },
+    setSpinLoading(state, payload) {
+      state.spinLoading = payload;
+    },
   },
   actions: {
     toggleSidebarColor({ commit }, payload) {
@@ -72,8 +79,15 @@ if (window.performance) {
     store.commit("user/setIsAdmin", true);
     store.dispatch("club/getAllClubs");
   }
+  if (
+    user &&
+    (user.roles.standOf === ROLES.CN || user.roles.standOf === ROLES.PCN)
+  ) {
+    store.commit("user/setPermissionChange", true);
+  }
   store.commit("user/setUser", user);
   store.dispatch("club/getAllClubs");
+  store.dispatch("role/getAllRoles");
 }
 
 export default store;

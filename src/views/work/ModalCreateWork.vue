@@ -78,6 +78,7 @@
 
 <script>
 import VsudInput from "@/components/VsudInput.vue";
+
 export default {
   components: {
     VsudInput,

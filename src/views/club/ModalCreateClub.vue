@@ -3,41 +3,41 @@
     <div class="modal-content p-3 text-black">
       <form>
         <div class="form-group">
-          <label for="fullname">Tên câu lạc bộ</label>
+          <label for="clubname">Tên câu lạc bộ</label>
           <input
-            v-model="member.fullname"
+            v-model="clubname"
             type="text"
             class="form-control"
-            id="fullname"
-            aria-describedby="fullname"
+            id="clubname"
+            aria-describedby="clubname"
             placeholder="Tên câu lạc bộ"
           />
         </div>
         <div class="form-group">
-          <label for="fullname">Tên viêt tắt</label>
+          <label for="standOfName">Tên viêt tắt</label>
           <input
-            v-model="member.fullname"
+            v-model="standOfName"
             type="text"
             class="form-control"
-            id="fullname"
-            aria-describedby="fullname"
+            id="standOfName"
+            aria-describedby="standOfName"
             placeholder="Tên viêt tắt"
           />
         </div>
         <div class="form-group">
-          <label for="birthday">Ngày thành lập</label>
+          <label for="foundedTime">Ngày thành lập</label>
           <input
-            v-model="member.birthday"
+            v-model="foundedTime"
             type="date"
             class="form-control"
-            id="birthday"
-            aria-describedby="birthday"
+            id="foundedTime"
+            aria-describedby="foundedTime"
           />
         </div>
         <div class="form-group">
           <label for="fullname">Người thành lập</label>
           <a-select
-            v-model:value="workerAssign"
+            v-model:value="founder"
             mode="single"
             style="width: 100%"
             placeholder="Chọn người thành lập câu lạc bộ"
@@ -70,25 +70,20 @@
 
 <script>
 import VsudInput from "@/components/VsudInput.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 
 export default {
   data() {
     return {
-      member: {
-        fullname: "",
-        studentCode: "",
-        classname: "",
-        birthday: "",
-        address: "",
-        phoneNumber: "",
-        email: "",
-      },
+      clubname: "",
+      standOfName: "",
+      foundedTime: "",
+      founder: [],
+      logo: "",
       options: [
         { value: 1, name: "Bui Van Ha" },
         { value: 5, name: "Hien Pham" },
       ],
-      workerAssign: [],
     };
   },
   components: {
@@ -96,14 +91,38 @@ export default {
   },
   methods: {
     ...mapActions({
-      addMember: "user/addMember",
+      createClub: "club/createClub",
+    }),
+    ...mapMutations({
+      setSpinLoading: "setSpinLoading",
     }),
     closeModalCreate() {
       this.$emit("closePopup");
     },
     async createMember() {
-      const data = { basicInfo: {}, memberInfo: {} };
-      // await this.addMember(data);
+      this.setSpinLoading(true);
+      const { clubname, standOfName, foundedTime } = this;
+      const data = {
+        name: clubname,
+        standOfName,
+        foundedTime,
+      };
+
+      await this.createClub(data)
+        .then((res) => {
+          // thong bao thanh cong
+          const idSetTimeout = setTimeout(() => {
+            this.closeModalCreate();
+            this.setSpinLoading(false);
+            clearTimeout(idSetTimeout);
+          }, 500);
+        })
+        .catch((err) => {
+          const idSetTimeout = setTimeout(() => {
+            this.setSpinLoading(false);
+            clearTimeout(idSetTimeout);
+          }, 500);
+        });
     },
   },
 };

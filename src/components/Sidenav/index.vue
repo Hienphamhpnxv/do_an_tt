@@ -18,9 +18,9 @@
             class="navbar-brand-img h-100 rounded"
             alt="main_logo"
           /> -->
-          <span class="ms-1 font-weight-bold fs-4 text-uppercase"
-            >FIT - HAUI</span
-          >
+          <span class="ms-1 font-weight-bold fs-4 text-uppercase">{{
+            user && user.club ? user.club.standOfName : "FIT - HAUI"
+          }}</span>
         </a>
       </div>
     </div>
@@ -29,6 +29,7 @@
   </aside>
 </template>
 <script>
+import { mapState } from "vuex";
 import SidenavList from "./SidenavList.vue";
 import logo from "@/assets/img/logo-ct.png";
 
@@ -42,6 +43,11 @@ export default {
       type: String,
       default: "",
     },
+  },
+  computed: {
+    ...mapState({
+      user: (state) => state.user.user,
+    }),
   },
   data() {
     return {

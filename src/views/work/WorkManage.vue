@@ -9,12 +9,12 @@
             @click="showModalMember = true"
           >
             <i class="fas fa-plus me-2"></i>
-            Tạo công việc
+            Tạo hoạt động
           </vsud-button>
         </div>
         <div class="card mb-4">
           <div class="card-header pb-0">
-            <h6>Danh sách công việc</h6>
+            <h6>Danh sách hoạt động</h6>
           </div>
           <div class="card-body px-0 pt-0 pb-2">
             <div class="table-responsive p-0">
@@ -24,7 +24,7 @@
                     <th
                       class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
                     >
-                      Tên công việc
+                      Tên hoạt động
                     </th>
                     <th
                       class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
@@ -85,10 +85,10 @@
                     </td>
                     <td class="align-middle text-sm">
                       <vsud-badge
-                        :color="work.status ? 'success' : 'secondary'"
+                        :color="getColorStatus(work.status)"
                         variant="gradient"
                         size="sm"
-                        >{{ work.status ? "Online" : "Offline" }}</vsud-badge
+                        >{{ getNameStatus(work.status) }}</vsud-badge
                       >
                     </td>
                     <td class="align-middle">
@@ -116,7 +116,7 @@
 
 <script>
 import ModalCreateWork from "./ModalCreateWork.vue";
-
+import { COMMON_WORK_STATUS } from "../../utils/constants";
 import VsudAvatar from "@/components/VsudAvatar.vue";
 import VsudBadge from "@/components/VsudBadge.vue";
 import VsudButton from "@/components/VsudButton.vue";
@@ -150,6 +150,19 @@ const works = [
     endDate: "20-09-2021",
     status: 0,
   },
+  {
+    id: 2,
+    workName: "Công việc 1",
+    workers: [
+      {
+        name: "Person 2",
+        avatar_url: img2,
+      },
+    ],
+    startDate: "15-09-2021",
+    endDate: "20-09-2021",
+    status: 2,
+  },
 ];
 
 export default {
@@ -162,9 +175,18 @@ export default {
   },
   data() {
     return {
+      COMMON_WORK_STATUS,
       works,
       showModalMember: false,
     };
+  },
+  methods: {
+    getColorStatus(status) {
+      return this.COMMON_WORK_STATUS[status].color;
+    },
+    getNameStatus(status) {
+      return this.COMMON_WORK_STATUS[status].name;
+    },
   },
 };
 </script>

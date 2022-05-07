@@ -78,7 +78,6 @@ import ProjectsCard from "./components/ProjectsCard.vue";
 import image1 from "../assets/img/home-page/img-1.jpg";
 import image2 from "../assets/img/home-page/img-2.jpg";
 import image3 from "../assets/img/home-page/img-3.jpg";
-import image4 from "../assets/img/home-page/img-4.jpg";
 
 const dummyManagerment = [
   {
@@ -97,7 +96,7 @@ const dummyManagerment = [
   },
   {
     id: 2,
-    title: "Quản lý công việc",
+    title: "Quản lý hoạt động",
     desc: " Wealth creation is an evolutionarily recent positive-sum game.It is all about who take the opportunity first.",
     image: image3,
     redirect: "/quan-ly-cong-viec",

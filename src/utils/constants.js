@@ -1,8 +1,17 @@
 export const ROLES = {
-  ADMIN: "Admin",
-  CHAIRMAN: "Chairman",
-  MEMBER: "Member",
-  COLLABORATOR: "Collaborator",
+  QL: "QL",
+  CN: "CN",
+  PCN: "PCN",
+  TV: "TV",
+  CTV: "CTV",
+};
+
+export const ROLES_EXPAND = {
+  QL: "Quản lý",
+  CN: "Chủ nhiệm",
+  PCN: "Phó chủ nhiệm",
+  TV: "Thành viên",
+  CTV: "Cộng tác viên",
 };
 
 export const API_END_POINT = {

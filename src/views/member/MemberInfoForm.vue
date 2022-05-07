@@ -118,26 +118,6 @@
             aria-describedby="email"
           />
         </div>
-        <div class="form-group" v-if="!isMemberColab">
-          <label>Chức vụ</label><br />
-          <div
-            class="form-check form-check-inline"
-            v-for="role in roles"
-            :key="role._id"
-          >
-            <input
-              class="form-check-input"
-              type="radio"
-              name="role"
-              :id="role.standOf"
-              :value="role.standOf"
-              v-model="roleRegisters"
-            />
-            <label class="form-check-label" :for="role.standOf">{{
-              role.name
-            }}</label>
-          </div>
-        </div>
         <div class="form-group d-flex justify-content-between">
           <button
             type="button"
@@ -147,7 +127,7 @@
             Hủy bỏ
           </button>
           <button type="button" class="btn btn-success" @click="createMember">
-            Đăng ký thành viên
+            Cập nhật thông tin
           </button>
         </div>
       </form>
@@ -158,14 +138,9 @@
 <script>
 import VsudInput from "@/components/VsudInput.vue";
 import { mapMutations, mapActions, mapState } from "vuex";
+import moment from "moment";
 
 export default {
-  props: {
-    isMemberColab: {
-      type: Boolean,
-      default: false,
-    },
-  },
   data() {
     return {
       name: "",
@@ -205,20 +180,28 @@ export default {
   components: {
     VsudInput,
   },
-  mounted() {
-    this.getAllRoles();
+  created() {
+    const { name, birthday, address, phone, email, gender } = this.user;
+    const { studentCode, classname, grade } = this.user.memberInfo;
+    this.name = name;
+    this.studentCode = studentCode;
+    this.classname = classname;
+    this.birthday = moment(birthday).format("YYYY-MM-DD");
+    this.address = address;
+    this.phone = phone;
+    this.email = email;
+    this.gender = gender;
+    this.grade = grade;
   },
   computed: {
     ...mapState({
-      roles: (state) => {
-        return state.role.roles.filter((el) => el.standOf !== "CTV");
-      },
+      roles: (state) => state.role.roles,
+      user: (state) => state.user.user,
     }),
   },
   methods: {
     ...mapActions({
-      addMember: "user/addMember",
-      getAllRoles: "role/getAllRoles",
+      updateUserById: "user/updateUserById",
     }),
     ...mapMutations({
       setSpinLoading: "setSpinLoading",
@@ -229,7 +212,8 @@ export default {
     async createMember() {
       this.setSpinLoading(true);
       const vm = this;
-      let {
+      const id = this.user._id;
+      const {
         name,
         studentCode,
         classname,
@@ -239,14 +223,8 @@ export default {
         email,
         gender,
         grade,
-        roleRegisters,
       } = this;
 
-      if (this.isMemberColab && !roleRegisters) {
-        roleRegisters = "CTV";
-      }
-
-      const club = JSON.parse(localStorage.getItem("user")).club._id;
       const data = {
         basicInfo: {
           name,
@@ -255,18 +233,16 @@ export default {
           birthday,
           phone,
           gender,
-          role: roleRegisters,
         },
         memberInfo: {
           studentCode,
           classname,
           grade,
-          club,
         },
       };
-      await this.addMember(data).then((res) => {
+      await this.updateUserById({ id, data }).then((res) => {
         vm.setSpinLoading(false);
-        window.location.reload();
+        vm.$emit("closePopup");
       });
     },
   },

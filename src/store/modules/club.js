@@ -8,7 +8,6 @@ import logoFIT from "@/assets/img/fit.jpg";
 export const club = {
   namespaced: true,
   state: () => ({
-    currentClub: {},
     clubSchool: [
       {
         logo: logoITSupport,
@@ -28,14 +27,14 @@ export const club = {
     ],
   }),
   mutations: {
-    setCurrentClub(state, payload) {
-      state.currentClub = payload;
-    },
     setClubSchool(state, payload) {
       const data = payload.map((el, index) => {
         return { ...state.clubSchool[index], ...el };
       });
       state.clubSchool = data;
+    },
+    setAddClub(state, payload) {
+      state.clubSchool.push(payload);
     },
   },
   actions: {
@@ -44,20 +43,23 @@ export const club = {
         .get("/club/get-all")
         .then((res) => {
           _.commit("setClubSchool", res.data);
-          _.dispatch("setCurrentClub");
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    setCurrentClub(_, payload) {
-      let current = JSON.parse(window.localStorage.getItem("currentClub"));
-
-      if (!current) {
-        current = _.state.clubSchool[0];
-        window.localStorage.setItem("currentClub", JSON.stringify(current));
-      }
-      _.commit("setCurrentClub", current);
+    createClub(_, payload) {
+      return new Promise(async (resolve, reject) => {
+        await instance
+          .post("/club/create-club", payload)
+          .then((res) => {
+            _.commit("setAddClub", res.data);
+            resolve(true);
+          })
+          .catch((err) => {
+            reject(false);
+          });
+      });
     },
   },
   getters: {},

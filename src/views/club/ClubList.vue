@@ -20,13 +20,13 @@
                 :key="club.id"
                 class="px-0 mb-2 border-0 list-group-item d-flex align-items-center"
               >
-                <vsud-avatar
+                <!-- <vsud-avatar
                   class="me-3"
                   :img="club.logo"
                   alt="kal"
                   border-radius="lg"
                   shadow="regular"
-                />
+                /> -->
                 <div
                   class="d-flex align-items-start flex-column justify-content-center"
                 >

@@ -1,4 +1,5 @@
 <template>
+  <Spinner :isShow="spinLoading" />
   <sidenav
     v-if="$store.state.showSidenav"
     :custom_class="$store.state.mcolor"
@@ -30,11 +31,12 @@
   </main>
 </template>
 <script>
+import Spinner from "@/components/Spinner.vue";
 import Sidenav from "@/components/Sidenav/index.vue";
 import Configurator from "@/examples/Configurator.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import AppFooter from "@/examples/Footer.vue";
-import { mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
 export default {
   name: "App",
   components: {
@@ -42,9 +44,13 @@ export default {
     Configurator,
     Navbar,
     AppFooter,
+    Spinner,
   },
 
   computed: {
+    ...mapState({
+      spinLoading: (state) => state.spinLoading,
+    }),
     navClasses() {
       return {
         "position-sticky blur shadow-blur mt-4 left-auto top-1 z-index-sticky":
