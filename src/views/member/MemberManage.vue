@@ -290,18 +290,18 @@ export default {
       this.memberDelete = member;
     },
     async confirmDelete() {
+      const vm = this;
       await this.deleteUserById({ id: this.memberDelete._id })
         .then((res) => {
           if (res) {
-            this.$refs["button-close"].click();
+            vm.$refs["button-close"].click();
           }
         })
         .catch((err) => {
-          this.$refs["button-close"].click();
+          vm.$refs["button-close"].click();
         });
     },
     getNameRole(role) {
-      console.log(role);
       return this.ROLES_EXPAND[role];
     },
   },

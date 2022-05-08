@@ -25,13 +25,16 @@ export const COMMON_WORK_STATUS = {
   0: {
     name: "Chờ đợi",
     color: "secondary",
+    value: 0,
   },
   1: {
     name: "Đang thực hiện",
     color: "warning",
+    value: 1,
   },
   2: {
     name: "Hoàn thành",
     color: "success",
+    value: 2,
   },
 };

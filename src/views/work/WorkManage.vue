@@ -4,6 +4,7 @@
       <div class="col-12">
         <div class="text-end mb-4">
           <vsud-button
+            v-if="permissionChange"
             color="dark"
             variant="gradient"
             @click="showModalMember = true"
@@ -63,24 +64,23 @@
                           />
                         </div> -->
                         <div class="d-flex flex-column justify-content-center">
-                          <h6 class="mb-0 text-sm">{{ work.workName }}</h6>
+                          <h6 class="mb-0 text-sm">{{ work.name }}</h6>
                         </div>
                       </div>
                     </td>
                     <td>
                       <p class="text-xs font-weight-bold mb-0">
-                        <!-- {{ member.role ? "Đội trường" : "Thành viên" }} -->
-                        Person 1
+                        {{ getPersonWork(work.userInfo) }}
                       </p>
                     </td>
                     <td class="align-middle">
                       <span class="text-secondary text-xs font-weight-bold">{{
-                        work.startDate
+                        formatDate(work.timeStart)
                       }}</span>
                     </td>
                     <td class="align-middle">
                       <span class="text-secondary text-xs font-weight-bold">{{
-                        work.endDate
+                        formatDate(work.timeEnd)
                       }}</span>
                     </td>
                     <td class="align-middle text-sm">
@@ -91,13 +91,26 @@
                         >{{ getNameStatus(work.status) }}</vsud-badge
                       >
                     </td>
-                    <td class="align-middle">
+                    <td class="align-middle" v-if="permissionChange">
                       <a
                         href="javascript:;"
-                        class="text-secondary font-weight-bold text-xs"
+                        class="text-primary font-weight-bold text-xs"
                         data-toggle="tooltip"
-                        data-original-title="Edit user"
-                        >Edit</a
+                        data-original-title="Edit work"
+                        @click="handleEdit(work)"
+                        >Chỉnh sửa</a
+                      >
+                    </td>
+                    <td class="align-middle" v-if="permissionChange">
+                      <a
+                        href="javascript:;"
+                        class="text-danger font-weight-bold text-xs"
+                        data-toggle="tooltip"
+                        data-original-title="Delete work"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteModal"
+                        @click="handleDelete(work)"
+                        >Xóa</a
                       >
                     </td>
                   </tr>
@@ -107,9 +120,52 @@
           </div>
         </div>
       </div>
+      <div
+        class="modal fade"
+        id="deleteModal"
+        tabindex="-1"
+        aria-labelledby="deleteModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteModalLabel">Xác thực</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">Bạn có đồng ý xóa công việc này?</div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+                ref="button-close"
+              >
+                hủy bỏ
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                @click="confirmDelete"
+              >
+                Đồng ý
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <Modal :value="showModalMember" body-class="wrap-preview rounded-3">
-      <ModalCreateWork @close-popup="showModalMember = false" />
+      <ModalCreateWork
+        @close-popup="closePopup"
+        :isEdit="isEdit"
+        :work="workEdit"
+      />
     </Modal>
   </div>
 </template>
@@ -117,53 +173,12 @@
 <script>
 import ModalCreateWork from "./ModalCreateWork.vue";
 import { COMMON_WORK_STATUS } from "../../utils/constants";
+import { mapMutations, mapState, mapActions } from "vuex";
+import moment from "moment";
+
 import VsudAvatar from "@/components/VsudAvatar.vue";
 import VsudBadge from "@/components/VsudBadge.vue";
 import VsudButton from "@/components/VsudButton.vue";
-import img1 from "../../assets/img/team-2.jpg";
-import img2 from "../../assets/img/team-3.jpg";
-
-const works = [
-  {
-    id: 0,
-    workName: "Công việc 1",
-    workers: [
-      {
-        name: "Person 1",
-        avatar_url: img1,
-      },
-    ],
-    startDate: "15-09-2021",
-    endDate: "20-09-2021",
-    status: 1,
-  },
-  {
-    id: 1,
-    workName: "Công việc 1",
-    workers: [
-      {
-        name: "Person 2",
-        avatar_url: img2,
-      },
-    ],
-    startDate: "15-09-2021",
-    endDate: "20-09-2021",
-    status: 0,
-  },
-  {
-    id: 2,
-    workName: "Công việc 1",
-    workers: [
-      {
-        name: "Person 2",
-        avatar_url: img2,
-      },
-    ],
-    startDate: "15-09-2021",
-    endDate: "20-09-2021",
-    status: 2,
-  },
-];
 
 export default {
   name: "TablesPage",
@@ -176,16 +191,74 @@ export default {
   data() {
     return {
       COMMON_WORK_STATUS,
-      works,
       showModalMember: false,
+      isEdit: false,
+      workEdit: null,
+      workDelete: null,
     };
   },
+  computed: {
+    ...mapState({
+      works: (state) => state.work.works,
+      permissionChange: (state) => state.user.permissionChange,
+    }),
+  },
+  mounted() {
+    if (!this.works.length) {
+      this.setSpinLoading(true);
+      this.getAllWorks();
+      this.setSpinLoading(false);
+    }
+  },
   methods: {
+    ...mapMutations({
+      setSpinLoading: "setSpinLoading",
+    }),
+    ...mapActions({
+      getAllWorks: "work/getAllWorks",
+      deleteWorkById: "work/deleteWorkById",
+    }),
+    closePopup() {
+      this.showModalMember = false;
+      this.isEdit = false;
+    },
     getColorStatus(status) {
       return this.COMMON_WORK_STATUS[status].color;
     },
     getNameStatus(status) {
       return this.COMMON_WORK_STATUS[status].name;
+    },
+    formatDate(date) {
+      return moment(date).format("l");
+    },
+    getPersonWork(users) {
+      const names = users.reduce((result, user) => {
+        result.push(user.name);
+        return result;
+      }, []);
+
+      return names.join(", ");
+    },
+    handleEdit(work) {
+      this.isEdit = true;
+      this.showModalMember = true;
+      this.workEdit = work;
+    },
+    async confirmDelete() {
+      const vm = this;
+      await this.deleteWorkById({ id: this.workDelete._id })
+        .then((res) => {
+          if (res) {
+            vm.$refs["button-close"].click();
+            vm.workDelete = null;
+          }
+        })
+        .catch((err) => {
+          vm.$refs["button-close"].click();
+        });
+    },
+    handleDelete(work) {
+      this.workDelete = work;
     },
   },
 };
