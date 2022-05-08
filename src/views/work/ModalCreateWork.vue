@@ -132,19 +132,20 @@ export default {
           (el) => el.role[0].standOf !== ROLES["CTV"]
         );
       },
+      user: (state) => state.user.user,
     }),
     memberOptions() {
       return this.members.map((el) => ({ ...el, value: el._id }));
     },
   },
   created() {
-    console.log(this.isEdit);
     if (this.isEdit && this.work) {
       this.name = this.work.name;
       this.timeStart = moment(this.work.timeStart).format("YYYY-MM-DD");
       this.timeEnd = moment(this.work.timeEnd).format("YYYY-MM-DD");
       this.description = this.work.description;
       this.memberWorks = this.work.memberWorks;
+      this.status = this.work.status;
     }
   },
   mounted() {
@@ -167,6 +168,7 @@ export default {
       const vm = this;
       const { name, timeStart, timeEnd, memberWorks, description, status } =
         this;
+      const club = this.user.club._id;
       const data = {
         name,
         timeStart,
@@ -174,6 +176,7 @@ export default {
         memberWorks,
         status,
         description,
+        club,
       };
       if (this.isEdit) {
         const id = this.work._id;
@@ -183,6 +186,7 @@ export default {
       } else {
         await this.addWork(data).then((res) => {
           vm.setSpinLoading(false);
+          this.closeModalCreate();
           window.location.reload();
         });
       }

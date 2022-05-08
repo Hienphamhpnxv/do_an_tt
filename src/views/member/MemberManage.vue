@@ -72,7 +72,7 @@
                     <th
                       class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
                     >
-                      Ngày tham gia
+                      Khóa
                     </th>
                     <th
                       class="text-secondary opacity-7"
@@ -124,9 +124,9 @@
                       </p>
                     </td>
                     <td class="align-middle text-center">
-                      <span class="text-secondary text-xs font-weight-bold">{{
-                        formatDate(member.createdAt)
-                      }}</span>
+                      <span class="text-secondary text-xs font-weight-bold"
+                        >K{{ member.memberInfo[0].grade }}
+                      </span>
                     </td>
                     <td class="align-middle" v-if="permissionChange">
                       <a

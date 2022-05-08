@@ -30,6 +30,9 @@ export const user = {
     setUserToLocal(state, payload) {
       localStorage.setItem("user", JSON.stringify(state.user));
     },
+    setClubUer(state, payload) {
+      state.user.club = payload;
+    },
   },
   actions: {
     reset(_, payload) {

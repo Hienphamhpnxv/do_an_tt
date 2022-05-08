@@ -36,7 +36,7 @@
                 <a
                   class="mb-0 btn btn-link pe-3 ps-0 ms-auto"
                   href="javascript:;"
-                  @click="$emit('SelectClub')"
+                  @click="$emit('SelectClub', club)"
                   >Chọn</a
                 >
               </li>

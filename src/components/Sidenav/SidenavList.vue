@@ -17,7 +17,7 @@
           :to="{ name: 'CommonWork' }"
         >
           <template #icon>
-            <icon name="dashboard" />
+            <icon name="office" />
           </template>
         </sidenav-collapse>
       </li>
@@ -60,6 +60,17 @@
           </template>
         </sidenav-collapse>
       </li> -->
+      <li class="nav-item">
+        <sidenav-collapse
+          href="javascript:;"
+          nav-text="Tài khoàn quản trị"
+          :to="{ name: 'AccountManagement' }"
+        >
+          <template #icon>
+            <icon name="customer-support" />
+          </template>
+        </sidenav-collapse>
+      </li>
       <li class="nav-item">
         <sidenav-collapse
           href="javascript:;"

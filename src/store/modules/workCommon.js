@@ -1,6 +1,6 @@
 import instance from "../axios.config";
 
-export const work = {
+export const workCommon = {
   namespaced: true,
   state: () => ({
     works: [],
@@ -27,9 +27,8 @@ export const work = {
   },
   actions: {
     async getAllWorks(_, payload) {
-      const idClub = _.rootState.user.user.club._id;
       await instance
-        .get(`/work/all-work/${idClub}`)
+        .get(`/work-club/all-work-club`)
         .then((res) => {
           _.commit("setWorks", res.data);
         })
@@ -39,7 +38,7 @@ export const work = {
     },
     async createWork(_, payload) {
       await instance
-        .post("/work/create-work", payload)
+        .post("/work-club/create-work-club", payload)
         .then((res) => {
           if (res.data) {
             _.commit("addWorkToList", res.data);
@@ -54,7 +53,7 @@ export const work = {
     async deleteWorkById(_, { id }) {
       return new Promise(async (resolve, reject) => {
         await instance
-          .delete(`/work/delete/${id}`)
+          .delete(`/work-club/delete-work-club/${id}`)
           .then((res) => {
             if (res.data.result) {
               _.commit("setListAfterDeleteWork", id);
@@ -69,10 +68,22 @@ export const work = {
     updateUserById(_, { id, data }) {
       return new Promise(async (resolve, reject) => {
         await instance
-          .put(`/work/update/${id}`, data)
-          .then((res) => {
+          .put(`/work-club/update-work-club/${id}`, data)
+          .then(async (res) => {
             if (res.data) {
-              _.commit("setListAfterUpdateWork", { id, data: res.data._doc });
+              const club = [...res.data._doc.clubWorks];
+              const teamSchool = [..._.rootState.club.clubSchool];
+              const clubInfo = club.reduce((result, el) => {
+                const hasClub = teamSchool.find((e) => e._id === el.clubId);
+                if (hasClub) {
+                  result.push(hasClub);
+                }
+                return result;
+              }, []);
+              _.commit("setListAfterUpdateWork", {
+                id,
+                data: { ...res.data._doc, clubInfo: [...clubInfo] },
+              });
               resolve(true);
             }
           })

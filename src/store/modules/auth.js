@@ -13,7 +13,10 @@ export const auth = {
         .post("auth/signin", { email, password })
         .then((res) => {
           _.commit("user/setUser", res.data, { root: true });
-          if (res.data && !res.data.memberId) {
+          if (
+            res.data &&
+            (!res.data.memberId || res.data.roles.standOf === ROLES.QL)
+          ) {
             _.commit("user/setIsAdmin", true, { root: true });
             _.dispatch("club/getAllClubs", null, { root: true });
           }

@@ -211,7 +211,9 @@ export default {
   computed: {
     ...mapState({
       roles: (state) => {
-        return state.role.roles.filter((el) => el.standOf !== "CTV");
+        return state.role.roles.filter(
+          (el) => el.standOf === "PCN" || el.standOf === "TV"
+        );
       },
     }),
   },

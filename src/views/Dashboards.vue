@@ -11,6 +11,17 @@
         </h3>
       </div>
     </div>
+    <div class="mb-4" v-if="isAdmin && selecteClub">
+      <vsud-button
+        color="dark"
+        v-if="isAdmin && selecteClub"
+        variant="gradient"
+        @click="goToDashboard"
+      >
+        <i class="fas fa-arrow-left me-2"></i>
+        quay lại giao diện chính
+      </vsud-button>
+    </div>
     <div class="h-75 d-flex accordion-body justify-content-center">
       <div class="w-100 row d-flex justify-content-between">
         <template v-if="isAdmin && !selecteClub">
@@ -67,13 +78,14 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import ClubList from "./club/ClubList.vue";
 import Card from "@/examples/Cards/Card.vue";
 import ActiveUsersChart from "@/examples/Charts/ActiveUsersChart.vue";
 import GradientLineChart from "@/examples/Charts/GradientLineChart.vue";
 import OrdersCard from "./components/OrdersCard.vue";
 import ProjectsCard from "./components/ProjectsCard.vue";
+import VsudButton from "@/components/VsudButton.vue";
 
 import image1 from "../assets/img/home-page/img-1.jpg";
 import image2 from "../assets/img/home-page/img-2.jpg";
@@ -112,6 +124,7 @@ export default {
     ProjectsCard,
     OrdersCard,
     ClubList,
+    VsudButton,
   },
   data() {
     return { dummyManagerment, selecteClub: false };
@@ -124,9 +137,20 @@ export default {
     }),
   },
   methods: {
+    ...mapMutations({
+      setClubUer: "user/setClubUer",
+      setUserToLocal: "user/setUserToLocal",
+    }),
     addClub() {},
-    selectClub() {
+    selectClub(data) {
+      this.setClubUer(data);
+      this.setUserToLocal();
       this.selecteClub = true;
+    },
+    goToDashboard() {
+      this.setClubUer(null);
+      this.setUserToLocal();
+      this.selecteClub = false;
     },
   },
 };

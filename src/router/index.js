@@ -87,6 +87,15 @@ const routes = [
     },
   },
   {
+    path: "/tai-khoan-quan-tri",
+    name: "AccountManagement",
+    component: MemberProfile,
+    meta: {
+      name: "Trang cá nhân",
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/tables",
     name: "Tables",
     component: Tables,

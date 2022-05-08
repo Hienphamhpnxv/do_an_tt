@@ -51,7 +51,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="work in works" :key="work.id">
+                  <tr v-for="work in works" :key="work._id">
                     <td>
                       <div class="d-flex px-2 py-1">
                         <!-- <div>
@@ -171,10 +171,10 @@
 </template>
 
 <script>
+import moment from "moment";
 import ModalCreateWork from "./ModalCreateWork.vue";
 import { COMMON_WORK_STATUS } from "../../utils/constants";
 import { mapMutations, mapState, mapActions } from "vuex";
-import moment from "moment";
 
 import VsudAvatar from "@/components/VsudAvatar.vue";
 import VsudBadge from "@/components/VsudBadge.vue";

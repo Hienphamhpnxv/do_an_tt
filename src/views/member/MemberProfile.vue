@@ -30,7 +30,7 @@
       </div>
     </div>
   </div>
-  <div class="py-4 container-fluid">
+  <div class="py-4 container-fluid" v-if="!isAdmin">
     <div class="mt-3 row">
       <div class="mt-4 col-24 mt-md-0"><member-card /></div>
     </div>
@@ -78,6 +78,7 @@ export default {
   computed: {
     ...mapState({
       user: (state) => state.user.user,
+      isAdmin: (state) => state.user.isAdmin,
     }),
   },
   mounted() {
