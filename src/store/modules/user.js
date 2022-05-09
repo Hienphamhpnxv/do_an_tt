@@ -60,6 +60,15 @@ export const user = {
         }
       });
     },
+    async getAllUser(_) {
+      _.commit("setSpinLoading", true, { root: true });
+      await instance.get(`/user/all-users`).then((res) => {
+        if (res.data) {
+          _.commit("setListUser", res.data);
+          _.commit("setSpinLoading", false, { root: true });
+        }
+      });
+    },
     deleteUserById(_, { id }) {
       return new Promise(async (resolve, reject) => {
         await instance

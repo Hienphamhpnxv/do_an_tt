@@ -16,18 +16,16 @@
           <vsud-button
             color="dark"
             variant="gradient"
-            v-if="permissionChange"
+            v-if="permissionChange || (!permissionChange && isAdmin)"
             @click="showModalMember = true"
           >
             <i class="fas fa-plus me-2"></i>
-            Thêm {{ isMemberColab ? "cộng tác viên" : "thành viên" }}
+            Thêm {{ nameAttacder }}
           </vsud-button>
         </div>
         <div class="card mb-4">
           <div class="card-header pb-0">
-            <h6>
-              Danh sách {{ isMemberColab ? "cộng tác viên" : "thành viên" }}
-            </h6>
+            <h6>Danh sách {{ nameAttacder }}</h6>
           </div>
           <div class="card-body px-0 pt-0 pb-2">
             <div class="table-responsive p-0">
@@ -37,7 +35,7 @@
                     <th
                       class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
                     >
-                      Tên {{ isMemberColab ? "cộng tác viên" : "thành viên" }}
+                      Tên {{ nameAttacder }}
                     </th>
                     <th
                       class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
@@ -76,7 +74,7 @@
                     </th>
                     <th
                       class="text-secondary opacity-7"
-                      v-if="permissionChange"
+                      v-if="permissionChange || (!permissionChange && isAdmin)"
                     ></th>
                   </tr>
                 </thead>
@@ -128,7 +126,10 @@
                         >K{{ member.memberInfo[0].grade }}
                       </span>
                     </td>
-                    <td class="align-middle" v-if="permissionChange">
+                    <td
+                      class="align-middle"
+                      v-if="permissionChange || (!permissionChange && isAdmin)"
+                    >
                       <a
                         href="javascript:;"
                         class="text-danger font-weight-bold text-xs"
@@ -167,7 +168,7 @@
             </div>
             <div class="modal-body">
               Bạn có đồng ý xóa
-              {{ isMemberColab ? "cộng tác viên" : "thành viên" }}
+              {{ nameAttacder }}
               <span class="text-danger">{{
                 memberDelete && memberDelete.name
               }}</span>
@@ -255,10 +256,16 @@ export default {
   computed: {
     ...mapState({
       members: function (state) {
-        const { isMemberColab, ROLES } = this;
+        const { isMemberColab, ROLES, permissionChange, isAdmin } = this;
         if (isMemberColab) {
           return state.user.listUser.filter(
             (el) => el.role[0].standOf === ROLES["CTV"]
+          );
+        } else if (!permissionChange && isAdmin) {
+          return state.user.listUser.filter(
+            (el) =>
+              el.role[0].standOf === ROLES["CN"] ||
+              el.role[0].standOf === ROLES["PCN"]
           );
         } else {
           return state.user.listUser.filter(
@@ -267,17 +274,30 @@ export default {
         }
       },
       permissionChange: (state) => state.user.permissionChange,
+      isAdmin: (state) => state.user.isAdmin,
     }),
+    nameAttacder() {
+      return this.isMemberColab
+        ? "cộng tác viên"
+        : this.isAdmin
+        ? "quản lý CLB"
+        : "thành viên";
+    },
   },
   created() {
     this.isMemberColab = this.$route.meta.memberColab ? true : false;
   },
   mounted() {
-    this.getAllUserByClub();
+    if (this.isAdmin) {
+      this.getAllUser();
+    } else {
+      this.getAllUserByClub();
+    }
   },
   methods: {
     ...mapActions({
       getAllUserByClub: "user/getAllUserByClub",
+      getAllUser: "user/getAllUser",
       deleteUserById: "user/deleteUserById",
     }),
     formatDate(date) {

@@ -60,7 +60,7 @@
           </template>
         </sidenav-collapse>
       </li> -->
-      <li class="nav-item">
+      <li v-if="isAdmin" class="nav-item">
         <sidenav-collapse
           href="javascript:;"
           nav-text="Tài khoàn quản trị"

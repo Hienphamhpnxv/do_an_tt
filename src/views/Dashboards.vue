@@ -59,8 +59,11 @@
         </template>
       </div>
     </div>
-    <!-- <div class="row accordion-body position-fixed bottom-0">
-      <p>
+    <div class="row accordion-body position-fixed bottom-0">
+      <p v-for="(text, index) in content" :key="index">
+        {{ text }}
+      </p>
+      <!-- <p>
         CLB Hỗ Trợ Kỹ Thuật IT Supporter Khoa Công Nghệ Thông Tin- Trường ĐH
         Công Nghiệp Hà Nội
       </p>
@@ -73,8 +76,8 @@
       <p>
         Fanpage:
         <a href="https://www.facebook.com/ITSupport.HaUI">IT Supporter</a>
-      </p>
-    </div> -->
+      </p> -->
+    </div>
   </div>
 </template>
 <script>
@@ -135,6 +138,9 @@ export default {
       isAdmin: (state) => state.user.isAdmin,
       user: (state) => state.user.user,
     }),
+    content() {
+      return this.user?.club?.description.split("\n");
+    },
   },
   methods: {
     ...mapMutations({

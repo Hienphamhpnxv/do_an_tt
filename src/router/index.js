@@ -89,7 +89,7 @@ const routes = [
   {
     path: "/tai-khoan-quan-tri",
     name: "AccountManagement",
-    component: MemberProfile,
+    component: MemberManage,
     meta: {
       name: "Trang cá nhân",
       requiresAuth: true,

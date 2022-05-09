@@ -35,21 +35,13 @@
           />
         </div>
         <div class="form-group">
-          <label for="fullname">Người thành lập</label>
-          <a-select
-            v-model:value="founder"
-            mode="single"
-            style="width: 100%"
-            placeholder="Chọn người thành lập câu lạc bộ"
-            option-label-prop="name"
-            :options="options"
-          >
-            <template #option="{ name }">
-              <span>
-                {{ name }}
-              </span>
-            </template>
-          </a-select>
+          <label for="description">Mô tả công việc</label>
+          <textarea
+            v-model="description"
+            class="form-control"
+            id="description"
+            rows="3"
+          ></textarea>
         </div>
         <div class="form-group d-flex justify-content-between">
           <button
@@ -101,11 +93,12 @@ export default {
     },
     async createMember() {
       this.setSpinLoading(true);
-      const { clubname, standOfName, foundedTime } = this;
+      const { clubname, standOfName, foundedTime, description } = this;
       const data = {
         name: clubname,
         standOfName,
         foundedTime,
+        description,
       };
 
       await this.createClub(data)
