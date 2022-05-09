@@ -205,6 +205,8 @@ export default {
     }),
     ...mapMutations({
       setSpinLoading: "setSpinLoading",
+      setIsSuccess: "setIsSuccess",
+      setIsDanger: "setIsDanger",
     }),
     closeModalCreate() {
       this.$emit("closePopup");
@@ -240,10 +242,16 @@ export default {
           grade,
         },
       };
-      await this.updateUserById({ id, data }).then((res) => {
-        vm.setSpinLoading(false);
-        vm.$emit("closePopup");
-      });
+      await this.updateUserById({ id, data })
+        .then((res) => {
+          vm.setSpinLoading(false);
+          vm.closeModalCreate();
+          vm.setIsSuccess();
+        })
+        .catch(() => {
+          vm.setSpinLoading(false);
+          vm.setIsDanger();
+        });
     },
   },
 };

@@ -175,6 +175,8 @@ export default {
   methods: {
     ...mapMutations({
       setSpinLoading: "setSpinLoading",
+      setIsSuccess: "setIsSuccess",
+      setIsDanger: "setIsDanger",
     }),
     ...mapActions({
       addWork: "workCommon/createWork",
@@ -207,13 +209,14 @@ export default {
       if (this.isEdit) {
         const id = this.work._id;
         await this.updateUserById({ id, data });
-        vm.setSpinLoading(false);
+        this.setSpinLoading(false);
         this.closeModalCreate();
+        this.setIsSuccess();
         // window.location.reload();
       } else {
         await this.addWork(data);
-        this.closeModalCreate();
         this.setSpinLoading(false);
+        this.setIsDanger();
       }
     },
   },

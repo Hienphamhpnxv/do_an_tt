@@ -118,24 +118,45 @@
             aria-describedby="email"
           />
         </div>
-        <div class="form-group" v-if="!isMemberColab">
-          <label>Chức vụ</label><br />
-          <div
-            class="form-check form-check-inline"
-            v-for="role in roles"
-            :key="role._id"
-          >
-            <input
-              class="form-check-input"
-              type="radio"
-              name="role"
-              :id="role.standOf"
-              :value="role.standOf"
-              v-model="roleRegisters"
-            />
-            <label class="form-check-label" :for="role.standOf">{{
-              role.name
-            }}</label>
+        <div class="form-group d-flex align-items-start">
+          <div class="col" v-if="!isMemberColab">
+            <label>Chức vụ</label><br />
+            <div class="d-flex align-items-center">
+              <div
+                class="form-check form-check-inline"
+                v-for="role in roles"
+                :key="role._id"
+              >
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="role"
+                  :id="role.standOf"
+                  :value="role.standOf"
+                  v-model="roleRegisters"
+                />
+                <label class="form-check-label" :for="role.standOf">{{
+                  role.name
+                }}</label>
+              </div>
+            </div>
+          </div>
+          <div class="col-6" v-if="isAdmin">
+            <label>Câu lạc bộ phụ trách</label><br />
+            <div class="dropdown">
+              <select v-model="club">
+                <option value="" disabled selected>
+                  Vui lòng chọn câu lạc bộ
+                </option>
+                <option
+                  v-for="(team, index) in clubSchool"
+                  :key="index"
+                  :value="team._id"
+                >
+                  {{ team.standOfName }}
+                </option>
+              </select>
+            </div>
           </div>
         </div>
         <div class="form-group d-flex justify-content-between">
@@ -147,7 +168,7 @@
             Hủy bỏ
           </button>
           <button type="button" class="btn btn-success" @click="createMember">
-            Đăng ký thành viên
+            Đăng ký {{ nameAttacder }}
           </button>
         </div>
       </form>
@@ -176,6 +197,7 @@ export default {
       phone: "",
       email: "",
       gender: "",
+      club: "",
       grade: [],
       roleRegisters: "",
       gradeOptions: [
@@ -210,12 +232,26 @@ export default {
   },
   computed: {
     ...mapState({
-      roles: (state) => {
-        return state.role.roles.filter(
-          (el) => el.standOf === "PCN" || el.standOf === "TV"
-        );
+      clubSchool: (state) => state.club.clubSchool,
+      isAdmin: (state) => state.user.isAdmin,
+      roles: function (state) {
+        const { isAdmin } = this;
+        if (isAdmin) {
+          return state.role.roles.filter((el) => el.standOf === "CN");
+        } else {
+          return state.role.roles.filter(
+            (el) => el.standOf === "PCN" || el.standOf === "TV"
+          );
+        }
       },
     }),
+    nameAttacder() {
+      return this.isMemberColab
+        ? "cộng tác viên"
+        : this.isAdmin
+        ? "quản lý CLB"
+        : "thành viên";
+    },
   },
   methods: {
     ...mapActions({
@@ -224,6 +260,8 @@ export default {
     }),
     ...mapMutations({
       setSpinLoading: "setSpinLoading",
+      setIsSuccess: "setIsSuccess",
+      setIsDanger: "setIsDanger",
     }),
     closeModalCreate() {
       this.$emit("closePopup");
@@ -248,7 +286,11 @@ export default {
         roleRegisters = "CTV";
       }
 
-      const club = JSON.parse(localStorage.getItem("user")).club._id;
+      let club = this.club;
+      if (!this.isAdmin) {
+        JSON.parse(localStorage.getItem("user")).club._id;
+      }
+
       const data = {
         basicInfo: {
           name,
@@ -266,10 +308,17 @@ export default {
           club,
         },
       };
-      await this.addMember(data).then((res) => {
+
+      if (name && studentCode && roleRegisters && classname && email) {
+        await this.addMember(data).then((res) => {
+          vm.setSpinLoading(false);
+          vm.setIsSuccess();
+          window.location.reload();
+        });
+      } else {
         vm.setSpinLoading(false);
-        window.location.reload();
-      });
+        vm.setIsDanger();
+      }
     },
   },
 };

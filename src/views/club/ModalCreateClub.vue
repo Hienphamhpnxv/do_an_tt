@@ -87,6 +87,8 @@ export default {
     }),
     ...mapMutations({
       setSpinLoading: "setSpinLoading",
+      setIsSuccess: "setIsSuccess",
+      setIsDanger: "setIsDanger",
     }),
     closeModalCreate() {
       this.$emit("closePopup");
@@ -107,12 +109,14 @@ export default {
           const idSetTimeout = setTimeout(() => {
             this.closeModalCreate();
             this.setSpinLoading(false);
+            this.setIsSuccess();
             clearTimeout(idSetTimeout);
           }, 500);
         })
         .catch((err) => {
           const idSetTimeout = setTimeout(() => {
             this.setSpinLoading(false);
+            this.setIsDanger();
             clearTimeout(idSetTimeout);
           }, 500);
         });

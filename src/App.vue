@@ -1,4 +1,20 @@
 <template>
+  <div
+    v-if="isSuccess"
+    :class="['alert alert-success alert-style text-white show-noti']"
+    id="notification-success"
+    role="alert"
+  >
+    Thành công
+  </div>
+  <div
+    v-if="isDanger"
+    :class="['alert alert-danger alert-style text-white show-noti']"
+    id="notification-danger"
+    role="alert"
+  >
+    Thất bại
+  </div>
   <Spinner :isShow="spinLoading" />
   <sidenav
     v-if="$store.state.showSidenav"
@@ -50,6 +66,8 @@ export default {
   computed: {
     ...mapState({
       spinLoading: (state) => state.spinLoading,
+      isSuccess: (state) => state.isSuccess,
+      isDanger: (state) => state.isDanger,
     }),
     navClasses() {
       return {
@@ -69,3 +87,40 @@ export default {
   },
 };
 </script>
+<style>
+.alert-style {
+  position: absolute !important;
+  text-align: center;
+  min-width: 200px;
+  z-index: 99999;
+  top: -100%;
+}
+
+.show-noti {
+  animation: notifi 1s alternate;
+}
+
+@keyframes notifi {
+  0% {
+    opacity: 0;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  40%,
+  60% {
+    opacity: 1;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  100% {
+    opacity: 0;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+</style>

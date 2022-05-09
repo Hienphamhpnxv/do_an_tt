@@ -32,6 +32,8 @@ const store = createStore({
     showFooter: true,
     showMain: true,
     spinLoading: false,
+    isSuccess: false,
+    isDanger: false,
   },
   mutations: {
     toggleConfigurator(state) {
@@ -67,6 +69,20 @@ const store = createStore({
     },
     setSpinLoading(state, payload) {
       state.spinLoading = payload;
+    },
+    setIsSuccess(state, payload) {
+      state.isSuccess = true;
+      const id = setTimeout(() => {
+        state.isSuccess = false;
+        clearTimeout(id);
+      }, 1100);
+    },
+    setIsDanger(state, payload) {
+      state.isDanger = true;
+      const id = setTimeout(() => {
+        state.isDanger = false;
+        clearTimeout(id);
+      }, 1100);
     },
   },
   actions: {

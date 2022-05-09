@@ -1,15 +1,5 @@
 <template>
   <div class="py-4 container-fluid">
-    <div
-      :class="[
-        'alert alert-success alert-style text-white',
-        isNotifi ? 'show-noti' : '',
-      ]"
-      role="alert"
-      ref="notication"
-    >
-      A simple success alert—check it out!
-    </div>
     <div class="row">
       <div class="col-12">
         <div class="text-end mb-4">
@@ -131,6 +121,7 @@
                       v-if="permissionChange || (!permissionChange && isAdmin)"
                     >
                       <a
+                        v-if="isMySeft(member)"
                         href="javascript:;"
                         class="text-danger font-weight-bold text-xs"
                         data-toggle="tooltip"
@@ -255,26 +246,26 @@ export default {
   },
   computed: {
     ...mapState({
+      user: (state) => state.user.user,
+      permissionChange: (state) => state.user.permissionChange,
+      isAdmin: (state) => state.user.isAdmin,
       members: function (state) {
         const { isMemberColab, ROLES, permissionChange, isAdmin } = this;
+        let data = [...state.user.listUser];
+        data = data.filter((el) => el._id !== this.user._id);
+
         if (isMemberColab) {
-          return state.user.listUser.filter(
-            (el) => el.role[0].standOf === ROLES["CTV"]
-          );
+          return data.filter((el) => el.role[0].standOf === ROLES["CTV"]);
         } else if (!permissionChange && isAdmin) {
-          return state.user.listUser.filter(
+          return data.filter(
             (el) =>
               el.role[0].standOf === ROLES["CN"] ||
               el.role[0].standOf === ROLES["PCN"]
           );
         } else {
-          return state.user.listUser.filter(
-            (el) => el.role[0].standOf !== ROLES["CTV"]
-          );
+          return data.filter((el) => el.role[0].standOf !== ROLES["CTV"]);
         }
       },
-      permissionChange: (state) => state.user.permissionChange,
-      isAdmin: (state) => state.user.isAdmin,
     }),
     nameAttacder() {
       return this.isMemberColab
@@ -324,32 +315,10 @@ export default {
     getNameRole(role) {
       return this.ROLES_EXPAND[role];
     },
+    isMySeft(member) {
+      return member._id !== this.user._id;
+    },
   },
 };
 </script>
-<style scoped>
-.alert-style {
-  position: absolute;
-  top: -100%;
-}
-
-.show-noti {
-  animation: notifi 3s alternate;
-}
-
-@keyframes notifi {
-  0% {
-    opacity: 1;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  100% {
-    opacity: 0;
-    top: 30%;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-}
-</style>
+<style scoped></style>

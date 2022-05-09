@@ -154,6 +154,8 @@ export default {
   methods: {
     ...mapMutations({
       setSpinLoading: "setSpinLoading",
+      setIsSuccess: "setIsSuccess",
+      setIsDanger: "setIsDanger",
     }),
     ...mapActions({
       getAllUserByClub: "user/getAllUserByClub",
@@ -180,15 +182,25 @@ export default {
       };
       if (this.isEdit) {
         const id = this.work._id;
-        await this.updateUserById({ id, data });
-        vm.setSpinLoading(false);
-        this.closeModalCreate();
+        await this.updateUserById({ id, data })
+          .then(() => {
+            vm.setSpinLoading(false);
+            vm.closeModalCreate();
+            vm.setIsSuccess();
+          })
+          .catch(() => {
+            vm.setIsDanger();
+          });
       } else {
-        await this.addWork(data).then((res) => {
-          vm.setSpinLoading(false);
-          this.closeModalCreate();
-          window.location.reload();
-        });
+        await this.addWork(data)
+          .then((res) => {
+            vm.setSpinLoading(false);
+            vm.closeModalCreate();
+            window.location.reload();
+          })
+          .catch(() => {
+            vm.setIsDanger();
+          });
       }
     },
   },
