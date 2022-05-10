@@ -6,6 +6,7 @@ import { club } from "./modules/club";
 import { role } from "./modules/role";
 import { work } from "./modules/work";
 import { workCommon } from "./modules/workCommon";
+import { classroom } from "./modules/classroom";
 
 const store = createStore({
   namespaced: true,
@@ -16,6 +17,7 @@ const store = createStore({
     role,
     work,
     workCommon,
+    classroom,
   },
   state: {
     hideConfigButton: false,

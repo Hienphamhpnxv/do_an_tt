@@ -12,6 +12,7 @@ import SignUp from "@/views/SignUp.vue";
 import MemberManage from "@/views/member/MemberManage.vue";
 import WorkManage from "@/views/work/WorkManage.vue";
 import MemberProfile from "@/views/member/MemberProfile.vue";
+import Classroom from "@/views/classroom/Classroom.vue";
 
 import store from "../store";
 
@@ -35,6 +36,16 @@ const routes = [
       requiresAuth: true,
     },
   },
+  {
+    path: "/khoa-hoc",
+    name: "KhoaHoc",
+    component: Classroom,
+    meta: {
+      name: "Khóa học",
+      requiresAuth: true,
+    },
+  },
+
   {
     path: "/cong-viec-chung",
     name: "CommonWork",

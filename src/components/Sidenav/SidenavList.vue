@@ -11,6 +11,13 @@
           </template>
         </sidenav-collapse>
       </li>
+      <li v-if="!isAdmin" class="nav-item">
+        <sidenav-collapse nav-text="Khóa học" :to="{ name: 'KhoaHoc' }">
+          <template #icon>
+            <icon name="spaceship" />
+          </template>
+        </sidenav-collapse>
+      </li>
       <li v-if="isAdmin" class="nav-item">
         <sidenav-collapse
           nav-text="Quản lý công việc chung"

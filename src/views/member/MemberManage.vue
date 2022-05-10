@@ -207,25 +207,6 @@ import VsudButton from "@/components/VsudButton.vue";
 import img1 from "../../assets/img/team-2.jpg";
 import img2 from "../../assets/img/team-3.jpg";
 
-const members = [
-  {
-    id: 0,
-    fullname: "Phạm Thị Thanh Hiền",
-    avatar_url: img1,
-    role: 1,
-    status: 1,
-    applyDate: "15-09-2021",
-  },
-  {
-    id: 1,
-    fullname: "Bùi Văn Hà",
-    avatar_url: img2,
-    role: 0,
-    status: 0,
-    applyDate: "15-09-2021",
-  },
-];
-
 export default {
   name: "TablesPage",
   components: {
@@ -279,7 +260,7 @@ export default {
     this.isMemberColab = this.$route.meta.memberColab ? true : false;
   },
   mounted() {
-    if (this.isAdmin) {
+    if (this.isAdmin && !this.user.club) {
       this.getAllUser();
     } else {
       this.getAllUserByClub();

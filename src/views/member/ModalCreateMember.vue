@@ -288,7 +288,7 @@ export default {
 
       let club = this.club;
       if (!this.isAdmin) {
-        JSON.parse(localStorage.getItem("user")).club._id;
+        club = JSON.parse(localStorage.getItem("user")).club._id;
       }
 
       const data = {

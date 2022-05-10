@@ -6,7 +6,7 @@
           {{
             isAdmin && !selecteClub
               ? "Câu lạc bộ Khoa công nghệ thông tin"
-              : user.club.name
+              : user.club?.name
           }}
         </h3>
       </div>
@@ -59,7 +59,7 @@
         </template>
       </div>
     </div>
-    <div class="row accordion-body position-fixed bottom-0">
+    <div class="row accordion-body position-fixed bottom-0" v-show="user.club">
       <p v-for="(text, index) in content" :key="index">
         {{ text }}
       </p>
@@ -141,6 +141,11 @@ export default {
     content() {
       return this.user?.club?.description.split("\n");
     },
+  },
+  beforeMount() {
+    if (this.isAdmin) {
+      this.goToDashboard();
+    }
   },
   methods: {
     ...mapMutations({
