@@ -38,3 +38,9 @@ export const COMMON_WORK_STATUS = {
     value: 2,
   },
 };
+
+export const STATUS_ACTIVE_CLASSROOM = {
+  PENDING: 0,
+  ACTIVE: 1,
+  STOP_ACTIVE: 2,
+};

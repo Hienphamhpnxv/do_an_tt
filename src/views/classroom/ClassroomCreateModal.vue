@@ -110,12 +110,10 @@ export default {
   components: {
     VsudInput,
   },
-  mounted() {
-    this.getAllUserByClub();
-  },
   computed: {
     ...mapState({
       isAdmin: (state) => state.user.isAdmin,
+      permissionChange: (state) => state.user.permissionChange,
       members: function (state) {
         return state.user.listUser.filter(
           (el) => el.role[0].standOf !== ROLES["CTV"]
@@ -132,9 +130,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      addMember: "user/addMember",
-      getAllRoles: "role/getAllRoles",
-      getAllUserByClub: "user/getAllUserByClub",
+      createClassroomAPI: "classroom/createClassroom",
     }),
     ...mapMutations({
       setSpinLoading: "setSpinLoading",
@@ -144,26 +140,26 @@ export default {
     closeModalCreate() {
       this.$emit("closePopup");
     },
-    createClassroom() {
+    async createClassroom() {
       this.$refs["btn-submit"].setAttribute("disabled", true);
-      this.setSpinLoading(true);
-      const vm = this;
       const code = shortid.generate();
-      let { name, subject, room, description, mentors } = this;
-      const data = { name, subject, room, description, mentors };
+      const { name, subject, room, description, mentors } = this;
+      const club = this.user.club._id;
+      const data = { name, subject, room, description, mentors, code, club };
 
-      if (name && subject && room && mentors.length && code) {
-        // await this.addMember(data).then((res) => {
-        vm.setSpinLoading(false);
-        vm.setIsSuccess();
-        this.$refs["btn-submit"].removeAttribute("disabled");
-        // window.location.reload();
-        // });
-      } else {
-        vm.setSpinLoading(false);
-        vm.setIsDanger();
-        this.$refs["btn-submit"].removeAttribute("disabled");
+      if (
+        name &&
+        subject &&
+        room &&
+        mentors.length &&
+        code &&
+        club &&
+        this.permissionChange
+      ) {
+        await this.createClassroomAPI(data);
+        this.closeModalCreate();
       }
+      this.$refs["btn-submit"].removeAttribute("disabled");
     },
   },
 };

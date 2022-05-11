@@ -6,9 +6,7 @@
           <vsud-button
             color="dark"
             variant="gradient"
-            v-if="
-              permissionChange || (!permissionChange && isAdmin && !user.club)
-            "
+            v-if="isAdmin"
             @click="showModalMember = true"
           >
             <i class="fas fa-plus me-2"></i>
@@ -64,13 +62,7 @@
                     >
                       Khóa
                     </th>
-                    <th
-                      class="text-secondary opacity-7"
-                      v-if="
-                        permissionChange ||
-                        (!permissionChange && isAdmin && !user.club)
-                      "
-                    ></th>
+                    <th class="text-secondary opacity-7" v-if="isAdmin"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -121,13 +113,7 @@
                         >K{{ member.memberInfo[0].grade }}
                       </span>
                     </td>
-                    <td
-                      class="align-middle"
-                      v-if="
-                        permissionChange ||
-                        (!permissionChange && isAdmin && !user.club)
-                      "
-                    >
+                    <td class="align-middle" v-if="isAdmin">
                       <a
                         v-if="isMySeft(member)"
                         href="javascript:;"
@@ -212,8 +198,6 @@ import ModalCreateMember from "./ModalCreateMember.vue";
 import VsudAvatar from "@/components/VsudAvatar.vue";
 import VsudBadge from "@/components/VsudBadge.vue";
 import VsudButton from "@/components/VsudButton.vue";
-import img1 from "../../assets/img/team-2.jpg";
-import img2 from "../../assets/img/team-3.jpg";
 
 export default {
   name: "TablesPage",
@@ -233,38 +217,36 @@ export default {
       isMemberColab: false,
     };
   },
-  mounted() {
-    if (this.user?.club) {
-      this.getAllUserByClub();
-    }
-  },
   computed: {
     ...mapState({
       user: (state) => state.user.user,
       permissionChange: (state) => state.user.permissionChange,
       isAdmin: (state) => state.user.isAdmin,
-      members: function (state) {
-        const { isMemberColab, ROLES } = this;
-        let data = [...state.user.listUser];
-        data = data.filter((el) => el._id !== this.user._id);
-
-        if (isMemberColab) {
-          return data.filter((el) => el.role[0].standOf === ROLES["CTV"]);
-        } else {
-          return data.filter((el) => el.role[0].standOf !== ROLES["CTV"]);
-        }
-      },
+      listAdmin: (state) => state.user.listAdmin,
     }),
     nameAttacder() {
-      return this.isMemberColab ? "cộng tác viên" : "thành viên";
+      return "quản lý CLB";
+    },
+    members() {
+      const { ROLES } = this;
+      let data = [...this.listAdmin];
+      data = data.filter((el) => el._id !== this.user._id);
+      return data.filter(
+        (el) =>
+          el.role[0].standOf === ROLES["CN"] ||
+          el.role[0].standOf === ROLES["PCN"]
+      );
     },
   },
   created() {
     this.isMemberColab = this.$route.meta.memberColab ? true : false;
+    if (!this.listAdmin.length) {
+      this.getAllUser();
+    }
   },
   methods: {
     ...mapActions({
-      getAllUserByClub: "user/getAllUserByClub",
+      getAllUser: "user/getAllUser",
       deleteUserById: "user/deleteUserById",
     }),
     formatDate(date) {

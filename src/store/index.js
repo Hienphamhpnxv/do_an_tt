@@ -107,6 +107,11 @@ if (window.performance) {
   ) {
     store.commit("user/setPermissionChange", true);
   }
+
+  if (user && (!user.memberId || user.roles.standOf === ROLES.QL)) {
+    store.commit("user/setIsAdmin", true, { root: true });
+    store.dispatch("club/getAllClubs", null, { root: true });
+  }
   store.commit("user/setUser", user);
   store.dispatch("club/getAllClubs");
   store.dispatch("role/getAllRoles");

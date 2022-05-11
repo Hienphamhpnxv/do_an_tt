@@ -2,7 +2,7 @@
   <div class="py-4 container-fluid">
     <div class="row">
       <div class="col-12">
-        <div class="text-end mb-4">
+        <div class="text-end mb-4 d-flex justify-content-end">
           <!-- <vsud-button
             color="dark"
             variant="gradient"
@@ -12,15 +12,20 @@
             <i class="fas fa-plus me-2"></i>
             Thêm {{ nameAttacder }}
           </vsud-button> -->
-          <vsud-button
-            v-if="permissionChange"
-            color="dark"
-            variant="gradient"
-            @click="showModalCourseCreate = true"
-          >
-            <i class="fas fa-plus me-2"></i>
-            Tạo mới {{ nameAttacder }}
-          </vsud-button>
+          <div class="col-5 d-flex justify-content-between">
+            <button class="btn btn-primary" @click="filter = null">
+              Toàn bộ
+            </button>
+            <button class="btn btn-warning" @click="filter = 0">
+              Chờ xác nhận
+            </button>
+            <button class="btn btn-success" @click="filter = 1">
+              Đang hoạt động
+            </button>
+            <button class="btn btn-secondary" @click="filter = 2">
+              Ngừng hoạt động
+            </button>
+          </div>
         </div>
         <div class="mb-4">
           <h3>Danh sách {{ nameAttacder }}</h3>
@@ -36,7 +41,7 @@
           <div
             class=""
             style="width: calc(100% / 4 - 20px)"
-            v-for="classroom in classrooms"
+            v-for="classroom in classroomsFilter"
             :key="classroom._id"
           >
             <div class="card">
@@ -107,7 +112,6 @@
 </template>
 
 <script>
-import moment from "moment";
 import ClassroomCreateModal from "./ClassroomCreateModal.vue";
 import { mapActions, mapState } from "vuex";
 import { STATUS_ACTIVE_CLASSROOM } from "../../utils/constants";
@@ -119,6 +123,7 @@ export default {
     return {
       STATUS_ACTIVE_CLASSROOM,
       showModalCourseCreate: false,
+      filter: null,
     };
   },
   computed: {
@@ -127,39 +132,35 @@ export default {
       permissionChange: (state) => state.user.permissionChange,
       isAdmin: (state) => state.user.isAdmin,
       classrooms: (state) => state.classroom.classrooms,
-      listUser: (state) => state.user.listUser,
     }),
     nameAttacder() {
       return "lớp học";
+    },
+    classroomsFilter() {
+      if (this.filter === null) {
+        return this.classrooms;
+      } else {
+        return this.classrooms.filter((el) => el.statusActive === this.filter);
+      }
     },
   },
   created() {
     if (!this.classrooms.length) {
       this.getAllClassrooms();
-    }
-
-    if (!this.listUser.length) {
-      if (this.isAdmin) {
-        this.getAllUser();
-      } else {
-        this.getAllUserByClub();
-      }
+    } else {
+      console.log(123);
     }
   },
   methods: {
     ...mapActions({
       getAllClassrooms: "classroom/getAllClassrooms",
-      getAllUserByClub: "user/getAllUserByClub",
-      getAllUser: "user/getAllUser",
     }),
     nameBtn(classroom) {
       switch (classroom.statusActive) {
         case STATUS_ACTIVE_CLASSROOM.PENDING:
-          return "Đang chờ xác nhận";
-        case STATUS_ACTIVE_CLASSROOM.ACTIVE:
-          return "Truy cập lớp học";
-        case STATUS_ACTIVE_CLASSROOM.STOP_ACTIVE:
-          return "Ngừng hoạt động";
+          return "Xác nhận";
+        default:
+          return "Chuyển trạng thái";
       }
     },
     colorBtn(classroom) {

@@ -7,6 +7,7 @@ export const user = {
     isAdmin: false,
     permissionChange: false,
     listUser: [],
+    listAdmin: [],
   }),
   mutations: {
     setUser(state, payload) {
@@ -20,6 +21,9 @@ export const user = {
     },
     setListUser(state, payload) {
       state.listUser = payload;
+    },
+    setListAdmin(state, payload) {
+      state.listAdmin = payload;
     },
     addUserToList(state, payload) {
       state.listUser.push(payload);
@@ -39,6 +43,7 @@ export const user = {
       _.commit("setUser", null);
       _.commit("setIsAdmin", false);
       _.commit("setPermissionChange", false);
+      _.commit("setListUser", []);
     },
     async addMember(_, payload) {
       await instance
@@ -51,21 +56,21 @@ export const user = {
         .catch((err) => console.log(err));
     },
     async getAllUserByClub(_, payload) {
-      _.commit("setSpinLoading", true, { root: true });
+      // _.commit("setSpinLoading", true, { root: true });
       const idClub = JSON.parse(localStorage.getItem("user")).club._id;
       await instance.get(`/user/all-users/${idClub}`).then((res) => {
         if (res.data) {
           _.commit("setListUser", res.data);
-          _.commit("setSpinLoading", false, { root: true });
+          // _.commit("setSpinLoading", false, { root: true });
         }
       });
     },
     async getAllUser(_) {
-      _.commit("setSpinLoading", true, { root: true });
+      // _.commit("setSpinLoading", true, { root: true });
       await instance.get(`/user/all-users`).then((res) => {
         if (res.data) {
-          _.commit("setListUser", res.data);
-          _.commit("setSpinLoading", false, { root: true });
+          _.commit("setListAdmin", res.data);
+          // _.commit("setSpinLoading", false, { root: true });
         }
       });
     },

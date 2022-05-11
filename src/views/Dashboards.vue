@@ -56,6 +56,29 @@
               </div>
             </router-link>
           </div>
+          <template v-if="user.club?.hasClassroom && isAdmin">
+            <router-link :to="classroomManagement.redirect">
+              <div class="card h-75 p-2">
+                <div
+                  class="overflow-hidden position-relative border-radius-lg bg-cover h-100 cursor-pointer bg-center"
+                  :style="{
+                    backgroundImage: 'url(' + classroomManagement.image + ')',
+                  }"
+                >
+                  <span class="mask bg-gradient-dark"></span>
+                  <div
+                    class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3"
+                  >
+                    <h5
+                      class="text-white font-weight-bolder mb-4 pt-2 text-uppercase text-center"
+                    >
+                      {{ classroomManagement.title }}
+                    </h5>
+                  </div>
+                </div>
+              </div>
+            </router-link>
+          </template>
         </template>
       </div>
     </div>
@@ -81,7 +104,7 @@
   </div>
 </template>
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import ClubList from "./club/ClubList.vue";
 import Card from "@/examples/Cards/Card.vue";
 import ActiveUsersChart from "@/examples/Charts/ActiveUsersChart.vue";
@@ -118,6 +141,13 @@ const dummyManagerment = [
   },
 ];
 
+const classroomManagement = {
+  title: "Quản lý lớp học",
+  desc: " Wealth creation is an evolutionarily recent positive-sum game.It is all about who take the opportunity first.",
+  image: image3,
+  redirect: "/quan-ly-lop-hoc",
+};
+
 export default {
   name: "DashboardDefault",
   components: {
@@ -130,17 +160,28 @@ export default {
     VsudButton,
   },
   data() {
-    return { dummyManagerment, selecteClub: false };
+    return { dummyManagerment, classroomManagement, selecteClub: false };
   },
   computed: {
     ...mapState({
       teamInSchool: (state) => state.club.clubSchool,
       isAdmin: (state) => state.user.isAdmin,
       user: (state) => state.user.user,
+      listUser: (state) => state.user.listUser,
     }),
     content() {
-      return this.user?.club?.description.split("\n");
+      return this.user?.club?.description?.split("\n");
     },
+  },
+  created() {
+    this.$store.state.isTransparent = "bg-transparent";
+    if (!this.listUser.length) {
+      if (this.isAdmin) {
+        this.getAllUser();
+      } else {
+        this.getAllUserByClub();
+      }
+    }
   },
   beforeMount() {
     if (this.isAdmin) {
@@ -151,6 +192,11 @@ export default {
     ...mapMutations({
       setClubUer: "user/setClubUer",
       setUserToLocal: "user/setUserToLocal",
+    }),
+    ...mapActions({
+      getAllUserByClub: "user/getAllUserByClub",
+      getAllUser: "user/getAllUser",
+      deleteUserById: "user/deleteUserById",
     }),
     addClub() {},
     selectClub(data) {

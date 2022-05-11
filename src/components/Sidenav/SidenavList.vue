@@ -11,8 +11,8 @@
           </template>
         </sidenav-collapse>
       </li>
-      <li v-if="!isAdmin" class="nav-item">
-        <sidenav-collapse nav-text="Khóa học" :to="{ name: 'KhoaHoc' }">
+      <li v-if="!isAdmin && user.club?.hasClassroom" class="nav-item">
+        <sidenav-collapse nav-text="Lớp học" :to="{ name: 'LopHoc' }">
           <template #icon>
             <icon name="spaceship" />
           </template>
@@ -78,6 +78,17 @@
           </template>
         </sidenav-collapse>
       </li>
+      <!-- <li v-if="isAdmin" class="nav-item">
+        <sidenav-collapse
+          href="javascript:;"
+          nav-text="Quản lý lớp học"
+          :to="{ name: 'ClassroomManagement' }"
+        >
+          <template #icon>
+            <icon name="spaceship" />
+          </template>
+        </sidenav-collapse>
+      </li> -->
       <li class="nav-item">
         <sidenav-collapse
           href="javascript:;"
@@ -147,6 +158,7 @@ export default {
   computed: {
     ...mapState({
       isAdmin: (state) => state.user.isAdmin,
+      user: (state) => state.user.user,
     }),
   },
   methods: {

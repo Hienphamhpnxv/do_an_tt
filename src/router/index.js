@@ -10,9 +10,11 @@ import Rtl from "@/views/Rtl.vue";
 import SignIn from "@/views/SignIn.vue";
 import SignUp from "@/views/SignUp.vue";
 import MemberManage from "@/views/member/MemberManage.vue";
+import MemberAdmin from "@/views/member/MemberAdmin.vue";
 import WorkManage from "@/views/work/WorkManage.vue";
 import MemberProfile from "@/views/member/MemberProfile.vue";
 import Classroom from "@/views/classroom/Classroom.vue";
+import ClassroomManageAdmin from "@/views/classroom/ClassroomManageAdmin.vue";
 
 import store from "../store";
 
@@ -37,11 +39,11 @@ const routes = [
     },
   },
   {
-    path: "/khoa-hoc",
-    name: "KhoaHoc",
+    path: "/lop-hoc",
+    name: "LopHoc",
     component: Classroom,
     meta: {
-      name: "Khóa học",
+      name: "Lớp học",
       requiresAuth: true,
     },
   },
@@ -100,9 +102,18 @@ const routes = [
   {
     path: "/tai-khoan-quan-tri",
     name: "AccountManagement",
-    component: MemberManage,
+    component: MemberAdmin,
     meta: {
       name: "Trang cá nhân",
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/quan-ly-lop-hoc",
+    name: "ClassroomManagement",
+    component: ClassroomManageAdmin,
+    meta: {
+      name: "Danh sách lớp học",
       requiresAuth: true,
     },
   },

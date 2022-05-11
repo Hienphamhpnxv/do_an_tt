@@ -52,7 +52,7 @@ import Sidenav from "@/components/Sidenav/index.vue";
 import Configurator from "@/examples/Configurator.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import AppFooter from "@/examples/Footer.vue";
-import { mapMutations, mapState } from "vuex";
+import { mapMutations, mapState, mapActions } from "vuex";
 export default {
   name: "App",
   components: {
@@ -68,6 +68,10 @@ export default {
       spinLoading: (state) => state.spinLoading,
       isSuccess: (state) => state.isSuccess,
       isDanger: (state) => state.isDanger,
+      teamInSchool: (state) => state.club.clubSchool,
+      isAdmin: (state) => state.user.isAdmin,
+      user: (state) => state.user.user,
+      listUser: (state) => state.user.listUser,
     }),
     navClasses() {
       return {
@@ -79,11 +83,16 @@ export default {
       };
     },
   },
-  beforeMount() {
+  created() {
     this.$store.state.isTransparent = "bg-transparent";
   },
   methods: {
     ...mapMutations(["toggleConfigurator", "navbarMinimize"]),
+    ...mapActions({
+      getAllUserByClub: "user/getAllUserByClub",
+      getAllUser: "user/getAllUser",
+      deleteUserById: "user/deleteUserById",
+    }),
   },
 };
 </script>

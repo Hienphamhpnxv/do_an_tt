@@ -148,9 +148,6 @@ export default {
       this.status = this.work.status;
     }
   },
-  mounted() {
-    this.getAllUserByClub();
-  },
   methods: {
     ...mapMutations({
       setSpinLoading: "setSpinLoading",
@@ -158,7 +155,6 @@ export default {
       setIsDanger: "setIsDanger",
     }),
     ...mapActions({
-      getAllUserByClub: "user/getAllUserByClub",
       addWork: "work/createWork",
       updateUserById: "work/updateUserById",
     }),

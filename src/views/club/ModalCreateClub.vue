@@ -24,6 +24,16 @@
             placeholder="Tên viêt tắt"
           />
         </div>
+        <div class="form-check">
+          <input
+            v-model="isClassroom"
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            id="isClassroom"
+          />
+          <label class="form-check-label" for="isClassroom"> Giảng dạy </label>
+        </div>
         <div class="form-group">
           <label for="foundedTime">Ngày thành lập</label>
           <input
@@ -70,6 +80,7 @@ export default {
       clubname: "",
       standOfName: "",
       foundedTime: "",
+      isClassroom: false,
       founder: [],
       logo: "",
       options: [
@@ -95,12 +106,15 @@ export default {
     },
     async createMember() {
       this.setSpinLoading(true);
-      const { clubname, standOfName, foundedTime, description } = this;
+      const { clubname, standOfName, foundedTime, description, isClassroom } =
+        this;
+      const hasClassroom = isClassroom ? 1 : 0;
       const data = {
         name: clubname,
         standOfName,
         foundedTime,
         description,
+        hasClassroom,
       };
 
       await this.createClub(data)
