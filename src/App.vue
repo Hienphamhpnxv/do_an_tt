@@ -5,7 +5,7 @@
     id="notification-success"
     role="alert"
   >
-    Thành công
+    <slot name="title">Thành công</slot>
   </div>
   <div
     v-if="isDanger"
@@ -13,7 +13,7 @@
     id="notification-danger"
     role="alert"
   >
-    Thất bại
+    <slot name="title">Thất bại</slot>
   </div>
   <Spinner :isShow="spinLoading" />
   <sidenav

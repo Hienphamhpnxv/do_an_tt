@@ -2,55 +2,21 @@
   <div class="py-4 container-fluid">
     <div class="row">
       <div class="col-12">
-        <div class="text-end mb-4">
-          <!-- <vsud-button
-            color="dark"
-            variant="gradient"
-            v-if="permissionChange || (!permissionChange && isAdmin)"
-            @click="showModalCourseCreate = true"
-          >
-            <i class="fas fa-plus me-2"></i>
-            Thêm {{ nameAttacder }}
-          </vsud-button> -->
-          <vsud-button
-            v-if="permissionChange"
-            color="dark"
-            variant="gradient"
-            @click="showModalCourseCreate = true"
-          >
-            <i class="fas fa-plus me-2"></i>
-            Tạo mới {{ nameAttacder }}
-          </vsud-button>
-        </div>
-        <div class="mb-4">
-          <h3>Danh sách {{ nameAttacder }}</h3>
-        </div>
-        <div v-if="!classrooms.length">
-          <h4>Lớp học sẽ được tạo trong thời gian tới!</h4>
-        </div>
-        <div
-          v-else
-          class="d-flex flex-wrap gap-3 align-items-start overflow-auto pb-4 pt-2"
-          style="height: calc(100vh - 240px)"
-        >
-          <div
-            class=""
-            style="width: calc(100% / 4 - 20px)"
-            v-for="classroom in classrooms"
-            :key="classroom._id"
-          >
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">{{ classroom.name }}</h5>
-                <p class="card-text">
-                  {{ classroom.subject }} - {{ classroom.room }}
-                </p>
-                <a href="javascript:;" :class="['btn', colorBtn(classroom)]">{{
-                  nameBtn(classroom)
-                }}</a>
-              </div>
-            </div>
+        <div class="d-flex gap-3 justify-content-end">
+          <div class="text-end mb-4">
+            <vsud-button
+              v-if="permissionChange && !isClassroomAccess"
+              color="dark"
+              variant="gradient"
+              @click="showModalCourseCreate = true"
+            >
+              <i class="fas fa-plus me-2"></i>
+              Tạo mới {{ nameAttacder }}
+            </vsud-button>
           </div>
+        </div>
+        <div style="height: calc(100vh - 240px)">
+          <router-view></router-view>
         </div>
       </div>
       <div
@@ -109,11 +75,11 @@
 <script>
 import moment from "moment";
 import ClassroomCreateModal from "./ClassroomCreateModal.vue";
-import { mapActions, mapState } from "vuex";
+import { mapMutations, mapActions, mapState } from "vuex";
 import { STATUS_ACTIVE_CLASSROOM } from "../../utils/constants";
 
 export default {
-  name: "Course",
+  name: "Classrooms",
   components: { ClassroomCreateModal },
   data() {
     return {
@@ -127,10 +93,20 @@ export default {
       permissionChange: (state) => state.user.permissionChange,
       isAdmin: (state) => state.user.isAdmin,
       classrooms: (state) => state.classroom.classrooms,
+      classroomAccess: (state) => state.classroom.classroomAccess,
       listUser: (state) => state.user.listUser,
     }),
     nameAttacder() {
       return "lớp học";
+    },
+    isStatusNotActive() {
+      return this.classroomAccess.statusActive === 0;
+    },
+    isStatusNotWork() {
+      return this.classroomAccess.statusActive === 2;
+    },
+    isClassroomAccess() {
+      return this.classroomAccess && Object.keys(this.classroomAccess).length;
     },
   },
   created() {
@@ -147,6 +123,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      setClassroomAccess: "classroom/setClassroomAccess",
+    }),
     ...mapActions({
       getAllClassrooms: "classroom/getAllClassrooms",
       getAllUserByClub: "user/getAllUserByClub",

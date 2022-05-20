@@ -28,30 +28,33 @@ export const auth = {
             _.commit("user/setPermissionChange", true, { root: true });
           }
 
-          window.localStorage.setItem("user", JSON.stringify(res.data));
+          localStorage.setItem("user", JSON.stringify(res.data));
         })
         .catch((err) => {
           console.log(err);
         });
     },
-    async signup(_, { email, password }) {
+    async signup(_, payload) {
       await instance
-        .post("auth/signup", { email, password })
+        .post("auth/signup", payload)
         .then((res) => {
-          window.localStorage.setItem("user", JSON.stringify(res.data));
+          _.commit("setSpinLoading", false, { root: true });
+          _.commit("setIsSuccess", true, { root: true });
         })
         .catch((err) => {
-          console.log(err);
+          _.commit("setSpinLoading", false, { root: true });
+          _.commit("setIsDanger", true, { root: true });
         });
     },
     logout(_, payload) {
-      window.localStorage.removeItem("user");
+      localStorage.removeItem("user");
+      localStorage.removeItem("classroom");
       _.dispatch("user/reset", null, { root: true });
     },
   },
   getters: {
     isLoggedIn(state) {
-      const user = window.localStorage.getItem("user");
+      const user = localStorage.getItem("user");
       return user ? true : false;
     },
   },

@@ -15,6 +15,10 @@ import WorkManage from "@/views/work/WorkManage.vue";
 import MemberProfile from "@/views/member/MemberProfile.vue";
 import Classroom from "@/views/classroom/Classroom.vue";
 import ClassroomManageAdmin from "@/views/classroom/ClassroomManageAdmin.vue";
+import ClassroomList from "@/views/classroom/ClassroomList.vue";
+import ClassroomListAdmin from "@/views/classroom/ClassroomListAdmin.vue";
+import ClassroomAccess from "@/views/classroom/ClassroomAccess.vue";
+import ClassroomAccessAdmin from "@/views/classroom/ClassroomAccessAdmin.vue";
 
 import store from "../store";
 
@@ -46,6 +50,26 @@ const routes = [
       name: "Lớp học",
       requiresAuth: true,
     },
+    children: [
+      {
+        path: "",
+        name: "ClassroomList",
+        component: ClassroomList,
+        meta: {
+          name: "Danh sách lớp học",
+          requiresAuth: true,
+        },
+      },
+      {
+        path: ":id",
+        name: "ClassroomAccess",
+        component: ClassroomAccess,
+        meta: {
+          name: "Chi tiết lớp học",
+          requiresAuth: true,
+        },
+      },
+    ],
   },
 
   {
@@ -113,9 +137,29 @@ const routes = [
     name: "ClassroomManagement",
     component: ClassroomManageAdmin,
     meta: {
-      name: "Danh sách lớp học",
+      name: "Lớp học",
       requiresAuth: true,
     },
+    children: [
+      {
+        path: "",
+        name: "ClassroomListAdmin",
+        component: ClassroomListAdmin,
+        meta: {
+          name: "Danh sách lớp học",
+          requiresAuth: true,
+        },
+      },
+      {
+        path: ":id",
+        name: "ClassroomAccessAdmin",
+        component: ClassroomAccessAdmin,
+        meta: {
+          name: "Chi tiết lớp học",
+          requiresAuth: true,
+        },
+      },
+    ],
   },
   {
     path: "/tables",
@@ -167,13 +211,11 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from) => {
+  const classroomAccess = store.state.classroom.classroomAccess ?? {};
   const isLoggin = store.getters["auth/isLoggedIn"];
   const user = JSON.parse(window.localStorage.getItem("user"));
-  // instead of having to check every route record with
-  // to.matched.some(record => record.meta.requiresAuth)
   if (user) {
     const decodedJwt = parseJwt(user.accessToken);
-
     if (decodedJwt.exp * 1000 < Date.now()) {
       return {
         path: "/sign-in",
@@ -182,10 +224,23 @@ router.beforeEach((to, from) => {
   }
 
   if (to.meta.requiresAuth && !isLoggin) {
-    // this route requires auth, check if logged in
-    // if not, redirect to login page.
     return {
       path: "/sign-in",
+    };
+  }
+
+  if (to.name === "ClassroomAccess" && !Object.keys(classroomAccess).length) {
+    return {
+      path: "/lop-hoc",
+    };
+  }
+
+  if (
+    to.name === "ClassroomAccessAdmin" &&
+    !Object.keys(classroomAccess).length
+  ) {
+    return {
+      path: "/quan-ly-lop-hoc",
     };
   }
 });

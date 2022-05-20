@@ -2,7 +2,16 @@
   <div class="py-4 container-fluid">
     <div class="row">
       <div class="col-12">
-        <div class="text-end mb-4">
+        <div class="text-end mb-4 d-flex justify-content-end gap-3">
+          <!-- <vsud-button
+            color="dark"
+            variant="gradient"
+            v-if="isAdmin"
+            @click="showModalTeacher = true"
+          >
+            <i class="fas fa-plus me-2"></i>
+            Thêm giảng viên
+          </vsud-button> -->
           <vsud-button
             color="dark"
             variant="gradient"
@@ -186,6 +195,9 @@
         :isMemberColab="isMemberColab"
       />
     </Modal>
+    <Modal :value="showModalTeacher" body-class="wrap-preview rounded-3">
+      <ModalCreateTeacher @close-popup="showModalTeacher = false" />
+    </Modal>
   </div>
 </template>
 
@@ -194,6 +206,7 @@ import moment from "moment";
 import { ROLES, ROLES_EXPAND } from "../../utils/constants";
 import { mapMutations, mapActions, mapState } from "vuex";
 import ModalCreateMember from "./ModalCreateMember.vue";
+import ModalCreateTeacher from "./ModalCreateTeacher.vue";
 
 import VsudAvatar from "@/components/VsudAvatar.vue";
 import VsudBadge from "@/components/VsudBadge.vue";
@@ -206,12 +219,14 @@ export default {
     VsudBadge,
     VsudButton,
     ModalCreateMember,
+    ModalCreateTeacher,
   },
   data() {
     return {
       ROLES,
       ROLES_EXPAND,
       showModalMember: false,
+      showModalTeacher: false,
       memberDelete: null,
       isNotifi: false,
       isMemberColab: false,

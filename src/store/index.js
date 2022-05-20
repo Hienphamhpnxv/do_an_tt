@@ -7,6 +7,7 @@ import { role } from "./modules/role";
 import { work } from "./modules/work";
 import { workCommon } from "./modules/workCommon";
 import { classroom } from "./modules/classroom";
+import { document } from "./modules/document";
 
 const store = createStore({
   namespaced: true,
@@ -18,6 +19,7 @@ const store = createStore({
     work,
     workCommon,
     classroom,
+    document,
   },
   state: {
     hideConfigButton: false,
@@ -97,6 +99,8 @@ const store = createStore({
 
 if (window.performance) {
   const user = JSON.parse(window.localStorage.getItem("user"));
+  const classroom = JSON.parse(localStorage.getItem("classroom") ?? "{}");
+
   if (user && !user.memberId) {
     store.commit("user/setIsAdmin", true);
     store.dispatch("club/getAllClubs");
@@ -106,12 +110,14 @@ if (window.performance) {
     (user.roles.standOf === ROLES.CN || user.roles.standOf === ROLES.PCN)
   ) {
     store.commit("user/setPermissionChange", true);
+    store.commit("classroom/setClassroomAccess", classroom);
   }
 
   if (user && (!user.memberId || user.roles.standOf === ROLES.QL)) {
     store.commit("user/setIsAdmin", true, { root: true });
     store.dispatch("club/getAllClubs", null, { root: true });
   }
+
   store.commit("user/setUser", user);
   store.dispatch("club/getAllClubs");
   store.dispatch("role/getAllRoles");

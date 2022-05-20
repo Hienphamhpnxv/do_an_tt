@@ -12,7 +12,7 @@
         </sidenav-collapse>
       </li>
       <li v-if="!isAdmin && user.club?.hasClassroom" class="nav-item">
-        <sidenav-collapse nav-text="Lớp học" :to="{ name: 'LopHoc' }">
+        <sidenav-collapse nav-text="Lớp học" :to="{ name: 'ClassroomList' }">
           <template #icon>
             <icon name="spaceship" />
           </template>
