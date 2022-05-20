@@ -5,13 +5,21 @@
         <div class="col-md-8 d-flex align-items-center">
           <h6 class="mb-0">Thông tin cá nhân</h6>
         </div>
-        <div class="col-md-4 text-end">
+        <div class="col-md-4 text-end d-flex justify-content-end gap-3">
+          <a href="javascript:;" @click="showModalChangePass = true">
+            <i
+              class="text-sm fas fa-key text-secondary"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Thay đổi mật khẩu"
+            ></i>
+          </a>
           <a href="javascript:;" @click="showModal = true">
             <i
               class="text-sm fas fa-user-edit text-secondary"
               data-bs-toggle="tooltip"
               data-bs-placement="top"
-              title="Edit Profile"
+              title="Thay đổi thông tin cá nhân"
             ></i>
           </a>
         </div>
@@ -73,20 +81,25 @@
     <Modal :value="showModal" body-class="wrap-preview rounded-3">
       <MemberInfoForm @close-popup="showModal = false" />
     </Modal>
+    <Modal :value="showModalChangePass" body-class="wrap-preview rounded-3">
+      <MemberChangePassword @close-popup="showModalChangePass = false" />
+    </Modal>
   </div>
 </template>
 
 <script>
 import moment from "moment";
 import MemberInfoForm from "./MemberInfoForm.vue";
+import MemberChangePassword from "./MemberChangePassword.vue";
 import { mapState } from "vuex";
 
 export default {
   name: "ProfileCard",
-  components: { MemberInfoForm },
+  components: { MemberInfoForm, MemberChangePassword },
   data() {
     return {
       showModal: false,
+      showModalChangePass: false,
     };
   },
   computed: {

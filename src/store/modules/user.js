@@ -105,6 +105,20 @@ export const user = {
           });
       });
     },
+    updatePasswordUserById(_, { id, data }) {
+      return new Promise(async (resolve, reject) => {
+        await instance
+          .put(`/user/update-password-user/${id}`, data)
+          .then((res) => {
+            if (res.data) {
+              resolve(true);
+            }
+          })
+          .catch(() => {
+            reject(false);
+          });
+      });
+    },
   },
   getters: {
     getUserInfo(state) {
