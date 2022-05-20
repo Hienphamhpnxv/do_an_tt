@@ -30,30 +30,27 @@
             <span>{{ mentor.phone }}</span>
           </p>
         </div>
-        <!-- <div class="list-group overflow-auto">
-          <div v-if="!documents.length"><h4>Chưa có tài liệu</h4></div>
-          <template v-else>
-            <div
-              v-for="doc in documents"
-              :key="doc._id"
-              class="d-flex align-items-center"
+        <div class="list-group overflow-auto">
+          <div
+            v-for="exam in exams"
+            :key="exam._id"
+            class="d-flex align-items-center gap-3 flex-column"
+          >
+            <button
+              type="button"
+              class="list-group-item list-group-item-action border-0 rounded-3"
+              @click="seeExam(exam)"
             >
-              <button
-                type="button"
-                class="list-group-item list-group-item-action border-0 rounded-3 me-3"
-                @click="downloadFile(doc.url)"
-              >
-                {{ doc.title }}
-              </button>
-              <i
+              {{ exam.title }}
+            </button>
+            <!-- <i
                 class="fas fa-trash cursor-pointer"
                 data-bs-toggle="modal"
                 data-bs-target="#deleteDocument"
                 @click="fileDelete = doc"
-              ></i>
-            </div>
-          </template>
-        </div> -->
+              ></i> -->
+          </div>
+        </div>
       </div>
       <div class="col d-flex flex-column gap-3">
         <!-- Danh sach tai lieu -->
@@ -130,20 +127,29 @@
         </div>
       </div>
     </div>
+    <Modal :value="showModalSeeExam" body-class="wrap-preview rounded-3">
+      <ExamSeeAdmin
+        @close-popup="showModalSeeExam = false"
+        :examSelected="examSelected"
+      />
+    </Modal>
   </div>
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
 import Spinner from "@/components/Spinner.vue";
 import { STATUS_ACTIVE_CLASSROOM } from "../../utils/constants";
+import ExamSeeAdmin from "./Exam/ExamSeeAdmin.vue";
 
 export default {
   name: "ClassroomAccess",
-  components: { Spinner },
+  components: { Spinner, ExamSeeAdmin },
   data() {
     return {
       file: null,
       fileDelete: null,
+      showModalSeeExam: false,
+      examSelected: null,
     };
   },
   computed: {
@@ -151,6 +157,7 @@ export default {
       user: (state) => state.user.user,
       classroomAccess: (state) => state.classroom.classroomAccess,
       documents: (state) => state.document.documents,
+      exams: (state) => state.document.exams,
     }),
     isStatusNotActive() {
       return this.classroomAccess.statusActive === 0;
@@ -172,6 +179,10 @@ export default {
       this.getAllDocumentByClassroomID({
         classroomId: this.classroomAccess._id,
       });
+
+      this.getAllExamDocumentByClassroomID({
+        classroomId: this.classroomAccess._id,
+      });
     }
   },
   methods: {
@@ -181,9 +192,15 @@ export default {
     }),
     ...mapActions({
       getAllDocumentByClassroomID: "document/getAllDocumentByClassroomID",
+      getAllExamDocumentByClassroomID:
+        "document/getAllExamDocumentByClassroomID",
       deleteDocumentById: "document/deleteDocumentById",
       updateStatusClassroom: "classroom/updateStatusClassroom",
     }),
+    seeExam(exam) {
+      this.examSelected = exam;
+      this.showModalSeeExam = true;
+    },
     selectFile(e) {
       this.file = e;
     },
